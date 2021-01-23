@@ -1,0 +1,101 @@
+@startuml
+class Server{
+    + Create()
+    + Run()
+    + Close()
+    - acceptor
+}
+
+abstract Connection{
+    + Open()
+    + Close()
+    + GetUploadTraffic()
+    + GetDownloadTraffic()
+    - RefreshTraffic()
+    - uploadTraffic
+    - downloadTraffic
+    - status
+}
+
+class RelayConnection extends Connection{
+    - Initialize()
+    - Receive()
+    - Send()
+    - inbound
+    - outbound
+}
+class ConnectionManager<Singleton>{
+    + GetInstance() : ConnectionManager
+    + Create(socket) : Connection
+    + GetConnections()
+    - connections
+}
+class Endpoint{
+    + Connect(timeout)
+    + GetState()
+    + GetHostname()
+    + GetPort()
+    + GetSocket()
+    + GetHostnameType()
+    - ParseHostnameType()
+    - Resolve()
+    - TryConnect()
+    - socket
+    - connectCompleted
+    - hostname
+    - port
+    - connectionState
+    - hostnameType
+}
+
+abstract Bound{
+    + Initialize()
+    + Receive()
+    + Send()
+    + GetEndpoint()
+    + GetReceiveBuffer()
+    # endpoint
+    # bufferSize
+    # buffer
+    # uninitialized
+}
+
+class BoundFactory{
+    + {static} Create()
+}
+
+class Event{
+    + AsyncWait()
+    + NotifyAll()
+    + NotifyOnce()
+}
+
+class TimeoutEvent{
+    + Run()
+    - timer
+    - actions
+}
+
+class FinalAction{
+    + Disable()
+    - enable
+    - actions
+}
+
+abstract Protocol extends Bound
+
+abstract Raw extends Bound
+
+class Direct extends Raw
+
+class Socks5Server extends Protocol{
+    - Handshake()
+}
+
+Server ..> ConnectionManager
+BoundFactory ..> Bound
+Endpoint ..* Bound
+Connection --o ConnectionManager
+RelayConnection --o Bound
+
+@enduml
