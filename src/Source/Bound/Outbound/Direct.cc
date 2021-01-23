@@ -1,4 +1,4 @@
-#include "Bound/Raw/Direct.hpp"
+#include "Bound/Outbound/Direct.hpp"
 
 Owl::Awaitable<Owl::Bound::TargetEndpoint> Owl::Direct::Initialize() {
     if (mUninitialized) {

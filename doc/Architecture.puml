@@ -49,7 +49,6 @@ class Endpoint{
 }
 
 abstract Bound{
-    + Initialize()
     + Receive()
     + Send()
     + GetEndpoint()
@@ -82,13 +81,15 @@ class FinalAction{
     - actions
 }
 
-abstract Protocol extends Bound
+abstract Inbound extends Bound{
+    + Initialize()
+}
 
-abstract Raw extends Bound
+abstract Outbound extends Bound
 
-class Direct extends Raw
+class Direct extends Outbound
 
-class Socks5Server extends Protocol{
+class Socks5Server extends Inbound{
     - Handshake()
 }
 

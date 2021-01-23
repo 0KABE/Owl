@@ -7,17 +7,12 @@
 namespace Owl {
     class Bound {
     public:
-        using BoundPtr = std::unique_ptr<Bound>;
         using BufferSize = size_t;
         using TargetEndpoint = std::optional<Endpoint>;
 
         explicit Bound(Endpoint endpoint, BufferSize bufferSize);
 
         virtual ~Bound() = default;
-
-        // TODO:Should be redesigned this method.
-        //  Some of Derived class will not get TargetEndpoint
-        virtual Awaitable<TargetEndpoint> Initialize() = 0;
 
         virtual Awaitable<void> Send(Buffer &buffer) = 0;
 
@@ -33,6 +28,9 @@ namespace Owl {
         Buffer mBuffer;
         bool mUninitialized = true;
     };
+
+    template<typename T>
+    concept BoundDerived = std::is_base_of<Bound, T>::value && !std::is_same<Bound, T>::value;
 }
 
 

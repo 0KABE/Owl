@@ -1,5 +1,5 @@
-#include "Bound/Protocol/Socks5Server.hpp"
-#include "Bound/Protocol/Socks5.hpp"
+#include "Bound/Inbound/Socks5Server.hpp"
+#include "Bound/Inbound/Socks5.hpp"
 
 Owl::Awaitable<Owl::Bound::TargetEndpoint> Owl::Socks5Server::Initialize() {
     using namespace ProtocolDetail;

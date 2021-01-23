@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Bound/Protocol.hpp"
+#include "Bound/Inbound.hpp"
 
 namespace Owl {
-    class Socks5Server : public Protocol {
+    class Socks5Server : public Inbound {
     public:
-        using Protocol::Protocol;
+        using Inbound::Inbound;
 
         Awaitable<TargetEndpoint> Initialize() override;
 

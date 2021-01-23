@@ -1,7 +1,7 @@
 #include "Connection/RelayConnection.hpp"
 #include "ConnectionManager.hpp"
-#include "Bound/Protocol/Socks5Server.hpp"
-#include "Bound/Raw/Direct.hpp"
+#include "Bound/Inbound/Socks5Server.hpp"
+#include "Bound/Outbound/Direct.hpp"
 #include "BoundFactory.hpp"
 
 void Owl::RelayConnection::Open() {

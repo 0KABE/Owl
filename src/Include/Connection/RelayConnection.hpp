@@ -1,7 +1,8 @@
 #pragma once
 
+#include <Bound/Inbound.hpp>
+#include <Bound/Outbound.hpp>
 #include "Connection.hpp"
-#include "Bound.hpp"
 
 namespace Owl {
     class RelayConnection : public Connection {
@@ -19,8 +20,8 @@ namespace Owl {
 
         Awaitable<void> Send();
 
-        Bound::BoundPtr mInbound;
-        Bound::BoundPtr mOutbound;
+        Inbound::BoundPtr mInbound;
+        Outbound::BoundPtr mOutbound;
     };
 }
 

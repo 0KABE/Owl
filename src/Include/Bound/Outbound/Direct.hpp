@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Bound/Raw.hpp"
+#include "Bound/Outbound.hpp"
 
 namespace Owl {
-    class Direct : public Raw {
+    class Direct : public Outbound {
     public:
-        using Raw::Raw;
+        using Outbound::Outbound;
 
-        Awaitable<TargetEndpoint> Initialize() override;
+        Awaitable<TargetEndpoint> Initialize();
 
         Awaitable<void> Send(Buffer &buffer) override;
 
