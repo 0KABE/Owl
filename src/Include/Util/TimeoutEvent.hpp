@@ -15,7 +15,7 @@ namespace Owl {
 
         explicit TimeoutEvent(Action action);
 
-        explicit TimeoutEvent(std::vector<Action> actions) ;
+        explicit TimeoutEvent(std::vector<Action> actions);
 
         ~TimeoutEvent() = default;
 
