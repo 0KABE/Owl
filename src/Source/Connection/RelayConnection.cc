@@ -1,7 +1,7 @@
 #include "Connection/RelayConnection.hpp"
 #include "ConnectionManager.hpp"
+#include "Proxy/ProxyNodeManager.hpp"
 #include "Bound/Inbound/Socks5Server.hpp"
-#include "Bound/Outbound/Direct.hpp"
 #include "BoundFactory.hpp"
 
 void Owl::RelayConnection::Open() {
@@ -20,7 +20,7 @@ Owl::RelayConnection::~RelayConnection() {
 
 Owl::Awaitable<void> Owl::RelayConnection::Initialize() {
     Bound::TargetEndpoint targetEndpoint = co_await mInbound->Initialize();
-    mOutbound = BoundFactory::Create<Direct>(std::move(*targetEndpoint));
+    mOutbound = ProxyNodeManager::GetInstance().GetProxy("DIRECT")->GetOutbound(std::move(*targetEndpoint));
 
     net::co_spawn(mInbound->GetEndpoint().GetSocket().get_executor(),
                   [=, self(shared_from_this())] { return RefreshTraffic(std::chrono::seconds(1)); },
