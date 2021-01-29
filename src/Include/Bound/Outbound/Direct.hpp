@@ -7,7 +7,7 @@ namespace Owl {
     public:
         using Outbound::Outbound;
 
-        Awaitable<TargetEndpoint> Initialize();
+        Awaitable<void> Initialize();
 
         Awaitable<void> Send(Buffer &buffer) override;
 

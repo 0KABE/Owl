@@ -1,11 +1,10 @@
 #include "Bound/Outbound/Direct.hpp"
 
-Owl::Awaitable<Owl::Bound::TargetEndpoint> Owl::Direct::Initialize() {
+Owl::Awaitable<void> Owl::Direct::Initialize() {
     if (mUninitialized) {
         co_await mEndpoint.Connect();
         mUninitialized = false;
     }
-    co_return std::nullopt;
 }
 
 Owl::Awaitable<void> Owl::Direct::Send(Owl::Buffer &buffer) {
