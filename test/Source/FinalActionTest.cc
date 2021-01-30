@@ -3,7 +3,10 @@
 
 TEST(FinalAction, Operator) {
     using namespace Owl;
-    FinalAction finalAction;
-
-    finalAction += [] { bool a = false; };
+    bool a = false;
+    {
+        FinalAction finalAction;
+        finalAction += [&] { a = true; };
+    }
+    ASSERT_EQ(a, true);
 }
