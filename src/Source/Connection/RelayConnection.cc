@@ -3,6 +3,7 @@
 #include "Proxy/ProxyNodeManager.hpp"
 #include "Bound/Inbound/Socks5Server.hpp"
 #include "BoundFactory.hpp"
+#include "Configuration.hpp"
 
 void Owl::RelayConnection::Open() {
     mConnectionWeakPtr = shared_from_this();
@@ -20,7 +21,7 @@ Owl::RelayConnection::~RelayConnection() {
 
 Owl::Awaitable<void> Owl::RelayConnection::Initialize() {
     Bound::TargetEndpoint targetEndpoint = co_await mInbound->Initialize();
-    mOutbound = ProxyNodeManager::GetInstance().GetProxy("DIRECT")->GetOutbound(std::move(*targetEndpoint));
+    mOutbound = Configuration::Match(std::move(*targetEndpoint));
 
     net::co_spawn(mInbound->GetEndpoint().GetSocket().get_executor(),
                   [=, self(shared_from_this())] { return RefreshTraffic(std::chrono::seconds(1)); },

@@ -41,6 +41,8 @@ namespace Owl {
 
         [[nodiscard]] const HostnameType &GetHostnameType() const;
 
+        std::string ToString() const;
+
     private:
         static HostnameType ParseHostnameType(const std::string &hostname);
 

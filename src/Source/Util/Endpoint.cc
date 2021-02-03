@@ -103,5 +103,9 @@ Owl::Endpoint::Socket &Owl::Endpoint::GetSocket() {
     return *mOptionalSocket;
 }
 
+std::string Owl::Endpoint::ToString() const {
+    return fmt::format("{}:{}", mHostname, mPort);
+}
+
 
 
