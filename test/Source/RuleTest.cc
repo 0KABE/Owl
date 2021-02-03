@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "RuleFactory.hpp"
+#include "Rule/RuleFactory.hpp"
 #include "Util/Endpoint.hpp"
 
 using namespace Owl;

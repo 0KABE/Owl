@@ -1,5 +1,5 @@
 #include "Rule/FinalRule.hpp"
-#include "RuleFactory.hpp"
+#include "Rule/RuleFactory.hpp"
 
 bool Owl::FinalRule::Match(const Owl::Endpoint &endpoint) { return true; }
 

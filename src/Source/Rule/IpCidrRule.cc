@@ -1,5 +1,5 @@
 #include "Rule/IpCidrRule.hpp"
-#include "RuleFactory.hpp"
+#include "Rule/RuleFactory.hpp"
 
 
 bool Owl::IpCidrRule::Match(const Owl::Endpoint &endpoint) {

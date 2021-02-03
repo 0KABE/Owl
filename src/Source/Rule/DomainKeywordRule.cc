@@ -1,5 +1,5 @@
 #include "Rule/DomainKeywordRule.hpp"
-#include "RuleFactory.hpp"
+#include "Rule/RuleFactory.hpp"
 
 
 bool Owl::DomainKeywordRule::Match(const Owl::Endpoint &endpoint) {

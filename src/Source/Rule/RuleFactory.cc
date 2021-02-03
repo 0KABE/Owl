@@ -1,4 +1,4 @@
-#include "RuleFactory.hpp"
+#include "Rule/RuleFactory.hpp"
 
 Owl::RuleFactory &Owl::RuleFactory::GetInstance() {
     static RuleFactory INSTANCE;

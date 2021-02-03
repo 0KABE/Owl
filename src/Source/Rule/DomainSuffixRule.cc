@@ -1,5 +1,5 @@
 #include "Rule/DomainSuffixRule.hpp"
-#include "RuleFactory.hpp"
+#include "Rule/RuleFactory.hpp"
 
 Owl::DomainSuffixRule::DomainSuffixRule(Owl::Proxy::ProxyPtr proxyPtr, std::string suffix)
         : Rule(std::move(proxyPtr)), mSuffix(std::move(suffix)) {}
