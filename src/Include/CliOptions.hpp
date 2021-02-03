@@ -6,6 +6,7 @@
 namespace Owl {
     struct CLIOptions {
         std::string logLevel;
+        std::string config;
     };
 
     struct LogLevelValidator : public CLI::Validator {

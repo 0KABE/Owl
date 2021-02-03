@@ -13,8 +13,7 @@ int main(int argc, char *argv[]) {
 
     spdlog::set_level(spdlog::level::from_str(cliOptions.logLevel));
 
-    //TODO implement --config CLI Option
-    Owl::Configuration::Load("../../Default.conf");
+    Owl::Configuration::Load(cliOptions.config);
 
     Owl::net::io_context ioContext;
     Owl::Server<Owl::RelayConnection>::ServerPtr server

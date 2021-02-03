@@ -28,4 +28,9 @@ void Owl::InitialCLI(CLI::App &app, Owl::CLIOptions &cliOptionResults) {
             ->type_name("LEVEL")
             ->check(LogLevelValidator())
             ->default_val("info");
+
+    app.add_option("-c,--config", cliOptionResults.config, "Set config path")
+            ->type_name("PATH")
+            ->required()
+            ->check(CLI::ExistingFile);
 }
