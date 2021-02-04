@@ -4,19 +4,16 @@
 #include <set>
 #include <spdlog/spdlog.h>
 #include "Connection.hpp"
+#include "Util/Singleton.hpp"
 
 namespace Owl {
-    class ConnectionManager {
+    class ConnectionManager : public Singleton<ConnectionManager> {
+        friend Singleton<ConnectionManager>;
     public:
         using ConnectionSharedPtr = std::shared_ptr<Connection>;
         using ConnectionWeakPtr = std::weak_ptr<Connection>;
         using ConnectionPtrs = std::set<ConnectionWeakPtr, std::owner_less<ConnectionWeakPtr>>;
         using Socket = net::ip::tcp::socket;
-
-        static ConnectionManager &GetInstance() {
-            static ConnectionManager connectionManager;
-            return connectionManager;
-        }
 
         template<typename T>
         requires ConnectionDerived<T>

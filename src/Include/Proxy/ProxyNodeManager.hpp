@@ -3,12 +3,12 @@
 #include "Proxy.hpp"
 #include "Bound/Outbound/Direct.hpp"
 #include "BuiltInProxyNode.hpp"
+#include "Util/Singleton.hpp"
 
 namespace Owl {
-    class ProxyNodeManager {
+    class ProxyNodeManager : public Singleton<ProxyNodeManager> {
+        friend Singleton<ProxyNodeManager>;
     public:
-        static ProxyNodeManager &GetInstance();
-
         Proxy::ProxyPtr GetProxy(const std::string &name);
 
         template<typename T>
@@ -21,6 +21,8 @@ namespace Owl {
         };
 
     private:
+        ProxyNodeManager() = default;
+
         std::unordered_map<std::string, Proxy::ProxyPtr> mBuiltInProxyNodes;
     };
 }

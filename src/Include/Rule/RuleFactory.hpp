@@ -1,15 +1,15 @@
 #pragma once
 
 #include "Rule.hpp"
+#include "Util/Singleton.hpp"
 
 namespace Owl {
-    class RuleFactory {
+    class RuleFactory : public Singleton<RuleFactory> {
+        friend Singleton<RuleFactory>;
     public:
         using GenerateFunc = std::function<Rule::RulePtr(Proxy::ProxyPtr proxyPtr, std::string rule)>;
 
-        static RuleFactory &GetInstance();
-
-        Rule::RulePtr Create(const std::string& type, Proxy::ProxyPtr proxyPtr, std::string rule);
+        Rule::RulePtr Create(const std::string &type, Proxy::ProxyPtr proxyPtr, std::string rule);
 
         template<typename T>
         struct Register {
