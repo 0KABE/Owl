@@ -1,6 +1,21 @@
 #pragma once
 
 namespace Owl {
+    /**
+     * @brief Singleton pattern template
+     *
+     * @tparam T Singleton pattern typename
+     *
+     * Template usage
+     * @code
+     * class Example : public Singleton<Example>{
+     *     friend Singleton<Example>;
+     *
+     * private:
+     *     Example() = default;
+     * };
+     * @endcode
+     */
     template<typename T>
     class Singleton {
     public:
