@@ -11,7 +11,7 @@ namespace Owl {
 
         bool Match(const Endpoint &endpoint) override;
 
-        static DomainKeywordRulePtr Create(const Proxy::ProxyPtr& proxyPtr, const std::string& rule);
+        static DomainKeywordRulePtr Create(const Proxy::ProxyPtr &proxyPtr, const std::string &rule);
 
     private:
         std::string mKeyword;
