@@ -5,6 +5,7 @@
 #include <spdlog/spdlog.h>
 #include "Connection.hpp"
 #include "Util/Singleton.hpp"
+#include "Util/Concepts.hpp"
 
 namespace Owl {
     class ConnectionManager : public Singleton<ConnectionManager> {
@@ -16,7 +17,7 @@ namespace Owl {
         using Socket = net::ip::tcp::socket;
 
         template<typename T>
-        requires ConnectionDerived<T>
+        requires Derived<Connection, T>
         ConnectionSharedPtr Create(Socket socket) {
             spdlog::trace("Creating a connection [{}:{}]<-->[{}:{}]",
                           socket.local_endpoint().address().to_string(),

@@ -28,9 +28,6 @@ namespace Owl {
         Buffer mBuffer;
         bool mUninitialized = true;
     };
-
-    template<typename T>
-    concept BoundDerived = std::is_base_of<Bound, T>::value && !std::is_same<Bound, T>::value;
 }
 
 

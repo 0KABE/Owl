@@ -43,8 +43,6 @@ namespace Owl {
         ConnectionWeakPtr mConnectionWeakPtr;
     };
 
-    template<class T>
-    concept ConnectionDerived = std::is_base_of<Connection, T>::value && !std::is_same<Connection, T>::value;
 }
 
 

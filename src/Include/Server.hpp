@@ -3,10 +3,11 @@
 #include <boost/asio.hpp>
 #include "ConnectionManager.hpp"
 #include "Util/Awaitable.hpp"
+#include "Util/Concepts.hpp"
 #include <spdlog/spdlog.h>
 
 namespace Owl {
-    template<typename ConnectionType> requires ConnectionDerived<ConnectionType>
+    template<typename ConnectionType> requires Derived<Connection, ConnectionType>
     class Server {
     public:
         using ServerPtr = std::shared_ptr<Server>;

@@ -1,10 +1,11 @@
 #pragma once
 
+#include "Util/Concepts.hpp"
 #include "Proxy.hpp"
 #include "BoundFactory.hpp"
 
 namespace Owl {
-    template<typename T> requires OutboundDerived<T>
+    template<typename T> requires Derived<Outbound, T>
     class BuiltInProxyNode : public Proxy {
     public:
         using ProxyPtr = std::shared_ptr<BuiltInProxyNode>;
