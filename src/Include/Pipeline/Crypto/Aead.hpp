@@ -77,16 +77,8 @@ namespace Owl {
             sodium_increment(std::data(mNonce), std::size(mNonce));
         }
 
-        bool mSaltSent = false;
-        bool mReceiveSalt = true;
-        bool mReceivePayloadLength = true;
-        const std::string mPassword;
-        PayloadLength mPayloadLength;
-        Key mKey;
         SubKey mSubKey;
-        Salt mSalt;
-        Nonce mNonce;
-        Buffer mOutput;
+        Nonce mNonce = {};
 
     private:
         void SendSalt() {
@@ -144,16 +136,17 @@ namespace Owl {
          */
         bool ReceivePayloadLength(Buffer &buffer) {
             using boost::asio::detail::socket_ops::network_to_host_short;
-            // receive the PayloadLength only when the PayloadLength has been sent
-            if (buffer.size() < sizeof(PayloadLength) + tagSize) return true;
 
-            mReceivePayloadLength = false;
-            DecryptOnce(static_cast<const uint8_t *> (std::data(buffer.data())),
-                        sizeof(PayloadLength) + tagSize,
-                        mPayloadLength.SingleBytes);
-            buffer.consume(sizeof(PayloadLength) + tagSize);
-            mPayloadLength.DoubleBytes = network_to_host_short(mPayloadLength.DoubleBytes);
-            return false;
+            // receive the PayloadLength only when the PayloadLength has been sent
+            if (buffer.size() >= sizeof(PayloadLength) + tagSize) {
+                DecryptOnce(static_cast<const uint8_t *> (std::data(buffer.data())),
+                            sizeof(PayloadLength) + tagSize,
+                            mPayloadLength.SingleBytes);
+                buffer.consume(sizeof(PayloadLength) + tagSize);
+                mPayloadLength.DoubleBytes = network_to_host_short(mPayloadLength.DoubleBytes);
+                mReceivePayloadLength = false;
+            }
+            return !mReceivePayloadLength;
         }
 
         /**
@@ -163,16 +156,25 @@ namespace Owl {
          */
         bool ReceivePayload(Buffer &buffer) {
             // receive the Payload when the whole payload has been sent
-            if (buffer.size() < mPayloadLength.DoubleBytes + tagSize) return true;
-
-            auto outputBuffer = mOutput.prepare(mPayloadLength.DoubleBytes);
-            DecryptOnce(static_cast<const uint8_t *>(std::data(buffer.data())),
-                        mPayloadLength.DoubleBytes + tagSize,
-                        static_cast<uint8_t *>(outputBuffer.data()));
-            mOutput.commit(mPayloadLength.DoubleBytes);
-            buffer.consume(mPayloadLength.DoubleBytes + tagSize);
-            mReceivePayloadLength = true;
-            return false;
+            if (buffer.size() >= mPayloadLength.DoubleBytes + tagSize) {
+                auto outputBuffer = mOutput.prepare(mPayloadLength.DoubleBytes);
+                DecryptOnce(static_cast<const uint8_t *>(std::data(buffer.data())),
+                            mPayloadLength.DoubleBytes + tagSize,
+                            static_cast<uint8_t *>(outputBuffer.data()));
+                mOutput.commit(mPayloadLength.DoubleBytes);
+                buffer.consume(mPayloadLength.DoubleBytes + tagSize);
+                mReceivePayloadLength = true;
+            }
+            return mReceivePayloadLength;
         }
+
+        bool mSaltSent = false;
+        bool mReceiveSalt = true;
+        bool mReceivePayloadLength = true;
+        const std::string mPassword;
+        PayloadLength mPayloadLength;
+        Salt mSalt;
+        Key mKey;
+        Buffer mOutput;
     };
 }
