@@ -14,7 +14,7 @@ namespace Owl {
         }
 
         Buffer &Decrypt(Buffer &input) override {
-            return mDecryptor.Encrypt(input);
+            return mDecryptor.Decrypt(input);
         }
 
     private:
