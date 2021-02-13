@@ -1,7 +1,7 @@
 #pragma once
 
 #include <boost/asio.hpp>
-#include "ConnectionManager.hpp"
+#include "Connection/ConnectionManager.hpp"
 #include "Util/Awaitable.hpp"
 #include "Util/Concepts.hpp"
 #include <spdlog/spdlog.h>

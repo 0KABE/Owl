@@ -2,7 +2,7 @@
 
 #include "Util/Concepts.hpp"
 #include "Proxy.hpp"
-#include "BoundFactory.hpp"
+#include "Bound/BoundFactory.hpp"
 
 namespace Owl {
     template<typename T> requires Derived<Outbound, T>

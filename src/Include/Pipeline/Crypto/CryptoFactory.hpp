@@ -1,7 +1,7 @@
 #pragma once
 
 #include <unordered_map>
-#include "Cipher.hpp"
+#include "Pipeline/Crypto/Cipher.hpp"
 #include "Util/Singleton.hpp"
 
 namespace Owl {
