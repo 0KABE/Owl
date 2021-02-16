@@ -4,7 +4,7 @@
 #include <sodium.h>
 
 #include "Pipeline/Crypto.hpp"
-#include "Utils.hpp"
+#include "Pipeline/Utils.hpp"
 #include "Hkdf.hpp"
 
 namespace Owl {

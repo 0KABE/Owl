@@ -3,7 +3,7 @@
 #include <openssl/hmac.h>
 #include <sodium.h>
 #include <spdlog/spdlog.h>
-#include "TypeTraits.hpp"
+#include "Pipeline/TypeTraits.hpp"
 #include "Util/FinalAction.hpp"
 
 namespace Owl {
@@ -49,7 +49,7 @@ namespace Owl {
             int hashLen = EVP_MD_size(md);
             if (length > (size_t) 0xff * hashLen) {
                 std::string errorMessage = fmt::format(
-                        "Cannot expand to more than 255 * {} bytes using the specified hash function", hashLen);
+                        "Cannot expand to more than 255 * {} uint8 using the specified hash function", hashLen);
                 spdlog::critical(errorMessage);
                 throw std::length_error(errorMessage);
             }

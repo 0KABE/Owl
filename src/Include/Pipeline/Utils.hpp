@@ -3,7 +3,7 @@
 #include <openssl/hmac.h>
 #include <sodium.h>
 #include <string>
-#include "TypeTraits.hpp"
+#include "Pipeline/TypeTraits.hpp"
 #include "Util/FinalAction.hpp"
 
 namespace Owl {

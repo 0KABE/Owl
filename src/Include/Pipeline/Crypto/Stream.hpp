@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Pipeline/Crypto/Utils.hpp"
+#include "Pipeline/Utils.hpp"
 #include "Pipeline/Crypto.hpp"
 #include <openssl/md5.h>
 
