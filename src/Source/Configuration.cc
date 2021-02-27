@@ -25,7 +25,7 @@ void Owl::Configuration::Load(const std::string &path) {
 }
 
 Owl::Outbound::BoundPtr Owl::Configuration::Match(Owl::Endpoint endpoint) {
-    Proxy::ProxyPtr proxyPtr = RuleManager::GetInstance().Match(endpoint);
+    ProxyNode::ProxyPtr proxyPtr = RuleManager::GetInstance().Match(endpoint);
     spdlog::info("{} matches rule {}", endpoint.ToString(), proxyPtr->GetName());
     return proxyPtr->GetOutbound(std::move(endpoint));
 }

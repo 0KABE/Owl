@@ -63,7 +63,8 @@ Owl::Awaitable<void> Owl::Socks5Server::Send(Owl::Buffer &buffer) {
     co_await net::async_write(mEndpoint.GetSocket(), buffer, use_awaitable);
 }
 
-Owl::Awaitable<void> Owl::Socks5Server::Receive() {
+Owl::Awaitable<std::reference_wrapper<Owl::Buffer>> Owl::Socks5Server::Receive() {
     size_t n = co_await mEndpoint.GetSocket().async_read_some(mBuffer.prepare(mBufferSize), use_awaitable);
     mBuffer.commit(n);
+    co_return mBuffer;
 }

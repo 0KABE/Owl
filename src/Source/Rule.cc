@@ -1,5 +1,5 @@
 #include "Rule.hpp"
 
-Owl::Rule::Rule(Owl::Proxy::ProxyPtr proxyPtr) : mProxyPtr(std::move(proxyPtr)) {}
+Owl::Rule::Rule(Owl::ProxyNode::ProxyPtr proxyPtr) : mProxyPtr(std::move(proxyPtr)) {}
 
-const Owl::Proxy::ProxyPtr &Owl::Rule::GetProxyPtr() const { return mProxyPtr; }
+const Owl::ProxyNode::ProxyPtr &Owl::Rule::GetProxyPtr() const { return mProxyPtr; }

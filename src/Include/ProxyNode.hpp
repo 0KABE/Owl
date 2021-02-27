@@ -4,15 +4,20 @@
 #include "Bound/Outbound.hpp"
 
 namespace Owl {
-    class Proxy {
+    class ProxyNode {
     public:
-        using ProxyPtr = std::shared_ptr<Proxy>;
+        using ProxyPtr = std::shared_ptr<ProxyNode>;
+
+        explicit ProxyNode(std::string name) : mName(std::move(name)) {}
 
         [[nodiscard]] virtual const std::string &GetName() const = 0;
 
         [[nodiscard]] virtual Outbound::BoundPtr GetOutbound(Endpoint endpoint) const = 0;
 
-        virtual ~Proxy() = default;
+        virtual ~ProxyNode() = default;
+
+    protected:
+        std::string mName;
     };
 }
 

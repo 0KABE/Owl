@@ -11,7 +11,7 @@ namespace Owl {
 
         Awaitable<void> Send(Buffer &buffer) override;
 
-        Awaitable<void> Receive() override;
+        Awaitable<std::reference_wrapper<Buffer>> Receive() override;
 
     private:
         Owl::Awaitable<std::optional<Endpoint>> Handshake();

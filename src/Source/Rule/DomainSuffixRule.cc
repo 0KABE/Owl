@@ -1,7 +1,7 @@
 #include "Rule/DomainSuffixRule.hpp"
 #include "Rule/RuleFactory.hpp"
 
-Owl::DomainSuffixRule::DomainSuffixRule(Owl::Proxy::ProxyPtr proxyPtr, std::string suffix)
+Owl::DomainSuffixRule::DomainSuffixRule(Owl::ProxyNode::ProxyPtr proxyPtr, std::string suffix)
         : Rule(std::move(proxyPtr)), mSuffix(std::move(suffix)) {}
 
 bool Owl::DomainSuffixRule::Match(const Owl::Endpoint &endpoint) {
@@ -10,7 +10,7 @@ bool Owl::DomainSuffixRule::Match(const Owl::Endpoint &endpoint) {
 }
 
 Owl::DomainSuffixRule::DomainSuffixRulePtr
-Owl::DomainSuffixRule::Create(const Owl::Proxy::ProxyPtr &proxyPtr, const std::string &rule) {
+Owl::DomainSuffixRule::Create(const Owl::ProxyNode::ProxyPtr &proxyPtr, const std::string &rule) {
     return std::make_unique<DomainSuffixRule>(proxyPtr, rule);
 }
 

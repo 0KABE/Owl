@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Proxy.hpp"
+#include "ProxyNode.hpp"
 #include "Bound/Outbound/Direct.hpp"
 #include "BuiltInProxyNode.hpp"
 #include "Util/Singleton.hpp"
@@ -9,7 +9,9 @@ namespace Owl {
     class ProxyNodeManager : public Singleton<ProxyNodeManager> {
         friend Singleton<ProxyNodeManager>;
     public:
-        Proxy::ProxyPtr GetProxy(const std::string &name);
+        ProxyNode::ProxyPtr GetProxy(const std::string &name);
+
+        void AddProxy(const ProxyNode::ProxyPtr& proxyPtr);
 
         template<typename T>
         struct BuiltInRegister {
@@ -23,8 +25,11 @@ namespace Owl {
     private:
         ProxyNodeManager() = default;
 
-        std::unordered_map<std::string, Proxy::ProxyPtr> mBuiltInProxyNodes;
+        std::unordered_map<std::string, ProxyNode::ProxyPtr> mBuiltInProxyNodes;
     };
+
+
+
 }
 
 

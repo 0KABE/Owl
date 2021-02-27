@@ -12,10 +12,11 @@ Owl::Awaitable<void> Owl::Direct::Send(Owl::Buffer &buffer) {
     co_await net::async_write(mEndpoint.GetSocket(), buffer, use_awaitable);
 }
 
-Owl::Awaitable<void> Owl::Direct::Receive() {
+Owl::Awaitable<std::reference_wrapper<Owl::Buffer>> Owl::Direct::Receive() {
     co_await Initialize();
     size_t n = co_await mEndpoint.GetSocket().async_read_some(mBuffer.prepare(mBufferSize), use_awaitable);
     this->mBuffer.commit(n);
+    co_return mBuffer;
 }
 
 

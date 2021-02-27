@@ -6,7 +6,7 @@ Owl::Awaitable<void> Owl::Reject::Send(Owl::Buffer &buffer) {
     throw std::runtime_error("Reject this connection");
 }
 
-Owl::Awaitable<void> Owl::Reject::Receive() {
+Owl::Awaitable<std::reference_wrapper<Owl::Buffer>> Owl::Reject::Receive() {
     spdlog::info("Reject this connection");
     throw std::runtime_error("Reject this connection");
 }

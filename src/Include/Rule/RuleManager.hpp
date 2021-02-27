@@ -13,7 +13,7 @@ namespace Owl {
 
         void AddRule(Rule::RulePtr rulePtr);
 
-        [[nodiscard]] Proxy::ProxyPtr Match(const Endpoint &endpoint) const;
+        [[nodiscard]] ProxyNode::ProxyPtr Match(const Endpoint &endpoint) const;
 
     private:
         RuleManager();

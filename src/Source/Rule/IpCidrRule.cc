@@ -11,10 +11,10 @@ bool Owl::IpCidrRule::Match(const Owl::Endpoint &endpoint) {
     return (checkIp & mMask) == (mIp & mMask);
 }
 
-Owl::IpCidrRule::IpCidrRule(Owl::Proxy::ProxyPtr proxyPtr, uint32_t ip, uint32_t mask)
+Owl::IpCidrRule::IpCidrRule(Owl::ProxyNode::ProxyPtr proxyPtr, uint32_t ip, uint32_t mask)
         : Rule(std::move(proxyPtr)), mIp(ip), mMask(mask) {}
 
-Owl::IpCidrRule::IpCidrRulePtr Owl::IpCidrRule::Create(const Owl::Proxy::ProxyPtr &proxyPtr, const std::string &rule) {
+Owl::IpCidrRule::IpCidrRulePtr Owl::IpCidrRule::Create(const Owl::ProxyNode::ProxyPtr &proxyPtr, const std::string &rule) {
     std::string::size_type slashPos = rule.find('/');
 
     uint32_t ip = boost::asio::ip::address_v4::from_string(rule.substr(0, slashPos)).to_ulong();

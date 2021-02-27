@@ -1,16 +1,16 @@
 #pragma once
 
 #include "Util/Concepts.hpp"
-#include "Proxy.hpp"
+#include "ProxyNode.hpp"
 #include "Bound/BoundFactory.hpp"
 
 namespace Owl {
     template<typename T> requires Derived<Outbound, T>
-    class BuiltInProxyNode : public Proxy {
+    class BuiltInProxyNode : public ProxyNode {
     public:
         using ProxyPtr = std::shared_ptr<BuiltInProxyNode>;
 
-        explicit BuiltInProxyNode(std::string name) : mName(std::move(name)) {}
+        using ProxyNode::ProxyNode;
 
         [[nodiscard]] const std::string &GetName() const override { return mName; }
 
@@ -18,8 +18,6 @@ namespace Owl {
             return BoundFactory::Create<T>(std::move(endpoint));
         }
 
-    private:
-        std::string mName;
     };
 
 
