@@ -233,8 +233,10 @@ static const EncryptedHandshake kEncryptedHandshakeTemplate = {
         __SFINIT(.len, 0),
 };
 
+const uint8_t kDataHeader[3] = {0x17, 0x03, 0x03};
+
 Owl::Buffer &Owl::TlsObfuscator::Obfuscate(Owl::Buffer &buffer) {
-    if (!mHandleOBFS) {
+    if (mHandleOBFS) {
         Buffer tmp;
 
         size_t buf_len = buffer.size();
@@ -282,7 +284,7 @@ Owl::Buffer &Owl::TlsObfuscator::Obfuscate(Owl::Buffer &buffer) {
                &kExtOthersTemplate, other_ext_len);
 
         buffer.commit(tls_len);
-        mHandleOBFS = true;
+        mHandleOBFS = false;
     } else {
         ObfsAppData(buffer);
     }
@@ -294,7 +296,6 @@ Owl::Buffer &Owl::TlsObfuscator::DeObfuscate(Owl::Buffer &buffer) {
     bool finish = false;
 
     while (!finish) {
-
         switch (deObfsStatus) {
             case RECEIVE_HELLO: {
                 size_t size = sizeof(ServerHello) + sizeof(ChangeCipherSpec);
@@ -340,12 +341,14 @@ Owl::Buffer &Owl::TlsObfuscator::DeObfuscate(Owl::Buffer &buffer) {
 }
 
 void Owl::TlsObfuscator::ObfsAppData(Owl::Buffer &buffer) {
-    Header header;
-    header.length.uInt16 = boost::endian::native_to_big<uint16_t>(buffer.size());
+    size_t buf_len = buffer.size();
 
     Buffer tmp;
-    memcpy(tmp.prepare(5).data(), &header, sizeof header);
-    tmp.commit(sizeof header);
+    auto head = tmp.prepare(5);
+    std::copy_n(kDataHeader, 3, static_cast<uint8_t *>(head.data()));
+    auto len = CT_HTONS(buf_len);
+    memcpy(static_cast<uint8_t *>(head.data()) + 3, &len, sizeof len);
+    tmp.commit(5);
 
     boost::asio::buffer_copy(tmp.prepare(buffer.size()), buffer.data());
     tmp.commit(buffer.size());
