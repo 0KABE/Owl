@@ -10,7 +10,7 @@ namespace Owl {
 
         explicit ProxyNode(std::string name) : mName(std::move(name)) {}
 
-        [[nodiscard]] virtual const std::string &GetName() const = 0;
+        [[nodiscard]] const std::string &GetName() const;
 
         [[nodiscard]] virtual Outbound::BoundPtr GetOutbound(Endpoint endpoint) const = 0;
 

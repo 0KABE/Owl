@@ -12,8 +12,6 @@ namespace Owl {
 
         using ProxyNode::ProxyNode;
 
-        [[nodiscard]] const std::string &GetName() const override { return mName; }
-
         [[nodiscard]] Outbound::BoundPtr GetOutbound(Endpoint endpoint) const override {
             return BoundFactory::Create<T>(std::move(endpoint));
         }

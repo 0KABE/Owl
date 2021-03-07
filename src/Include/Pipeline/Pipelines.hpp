@@ -6,6 +6,7 @@ namespace Owl {
     class Pipelines : public Pipeline {
     public:
         using PipelinePtrCollection = std::vector<PipelinePtr>;
+        using PipelinesPtr = std::unique_ptr<Pipelines>;
 
         Buffer &Wrap(Buffer &buffer) override;
 
