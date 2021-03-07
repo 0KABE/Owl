@@ -1,0 +1,5 @@
+[Proxy]
+Proxy  A=ss,serverA.com,443,interval=100
+
+   ProxyB =   ss , serverB.com, 443,  interval = 100
+

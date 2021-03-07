@@ -2,6 +2,26 @@
 #include "Configuration/ConfigurationParser.hpp"
 
 
+TEST(ConfigurationParser, Proxy) {
+    using namespace Owl;
+
+    Owl::ConfigurationParser configurationParser("../../test/Source/ConfigurationParser-Proxy.txt");
+
+    ConfInfo confInfo = configurationParser.Parse();
+
+    ASSERT_EQ(confInfo.proxies[0].name, U"Proxy  A");
+    ASSERT_EQ(confInfo.proxies[0].protocol, U"ss");
+    ASSERT_EQ(confInfo.proxies[0].server, U"serverA.com");
+    ASSERT_EQ(confInfo.proxies[0].port, 443);
+    ASSERT_EQ(confInfo.proxies[0].properties[U"interval"], U"100");
+
+    ASSERT_EQ(confInfo.proxies[1].name, U"ProxyB");
+    ASSERT_EQ(confInfo.proxies[1].protocol, U"ss");
+    ASSERT_EQ(confInfo.proxies[1].server, U"serverB.com");
+    ASSERT_EQ(confInfo.proxies[1].port, 443);
+    ASSERT_EQ(confInfo.proxies[1].properties[U"interval"], U"100");
+}
+
 TEST(ConfigurationParser, Rule) {
     using namespace Owl;
 
