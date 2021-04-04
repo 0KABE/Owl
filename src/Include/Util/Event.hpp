@@ -14,6 +14,8 @@ namespace Owl {
 
         void NotifyOnce();
 
+        void ContinuouslyNotify();
+
     private:
         net::steady_timer timer;
     };

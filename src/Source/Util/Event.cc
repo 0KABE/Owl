@@ -14,6 +14,10 @@ void Owl::Event::NotifyAll() { timer.cancel(); }
 
 void Owl::Event::NotifyOnce() { timer.cancel_one(); }
 
+void Owl::Event::ContinuouslyNotify() {
+    timer.expires_at(std::chrono::steady_clock::now());
+}
+
 
 
 
