@@ -18,3 +18,5 @@ void Owl::TimeoutEvent::Run(const boost::asio::executor &executor, Owl::TimeoutE
             for (const Action &action : mActions) action(errorCode);
     });
 }
+
+void Owl::TimeoutEvent::Cancel() { mTimer->cancel(); }

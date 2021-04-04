@@ -23,6 +23,8 @@ namespace Owl {
 
         void Run(const net::executor &executor, Timeout timeout);
 
+        void Cancel();
+
     private:
         Timer mTimer;
         std::vector<Action> mActions;
