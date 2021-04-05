@@ -88,3 +88,35 @@ TEST(Event, Wait_After_Notify) {
     if (timeout) GTEST_FATAL_FAILURE_("Event::WaitAfterNotify timeout");
     ASSERT_EQ(status, FINISHED);
 }
+
+Awaitable<void> NotifyOnceHelper(int &count, Event &event) {
+    co_await event.AsyncWait();
+    ++count;
+}
+
+TEST(Event, Notify_Once) {
+    net::io_context ioContext;
+    Event event(ioContext.get_executor());
+    int count = 0;
+
+    for (int i = 0; i < 10; ++i) {
+        net::co_spawn(ioContext.get_executor(), [&] { return NotifyOnceHelper(count, event); }, net::detached);
+    }
+
+    TimeoutEvent notifyEvent([&](const TimeoutEvent::ErrorCode &errorCode) {
+        if (errorCode != TimeoutEvent::CANCEL_ERROR) {
+            event.NotifyOnce();
+        }
+    });
+    notifyEvent.Run(ioContext.get_executor(), TimeoutEvent::Timeout(10));
+
+    TimeoutEvent stopIoContextEvent([&](const TimeoutEvent::ErrorCode &ec) {
+        if (ec != net::error::operation_aborted) {
+            ioContext.stop();
+        }
+    });
+    stopIoContextEvent.Run(ioContext.get_executor(), TimeoutEvent::Timeout(20));
+
+    ioContext.run();
+    ASSERT_EQ(count, 1);
+}
