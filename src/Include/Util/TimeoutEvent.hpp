@@ -8,8 +8,10 @@ namespace Owl {
     class TimeoutEvent {
     public:
         using Timeout = std::chrono::milliseconds;
-        using Action = std::function<void(boost::system::error_code)>;
+        using ErrorCode = boost::system::error_code;
+        using Action = std::function<void(ErrorCode)>;
         using Timer = std::optional<net::steady_timer>;
+        static inline const ErrorCode &CANCEL_ERROR = net::error::operation_aborted;
 
         TimeoutEvent() = default;
 
