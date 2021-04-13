@@ -14,9 +14,8 @@ Owl::EventPtr Owl::Event::EnableCallback() {
         mTimer.async_wait([=, self = shared_from_this()](ErrorCode errorCode) {
             SPDLOG_TRACE("Callback[{}] is invoked with error: {}, code: {}", fmt::ptr(this), errorCode.message(),
                          errorCode.value());
-            if (errorCode != CANCEL_ERROR)
-                for (const Action &action : mActions)
-                    (*action)(errorCode);
+            for (const ActionPtr &action : mActions)
+                (*action)(errorCode);
         });
     }
     return shared_from_this();
