@@ -39,12 +39,12 @@ void Owl::Event::ContinuouslyNotify() {
     mTimer.expires_at(std::chrono::steady_clock::now());
 }
 
-Owl::Event &Owl::Event::operator+=(const Owl::Event::Action &action) {
+Owl::Event &Owl::Event::operator+=(const Owl::Event::ActionPtr &action) {
     mActions.insert(action);
     return *this;
 }
 
-Owl::Event &Owl::Event::operator-=(const Owl::Event::Action &action) {
+Owl::Event &Owl::Event::operator-=(const Owl::Event::ActionPtr &action) {
     mActions.erase(action);
     return *this;
 }

@@ -11,13 +11,16 @@ namespace Owl {
     public:
         using EventPtr = std::shared_ptr<Event>;
         using ErrorCode = boost::system::error_code;
-        using Action = std::shared_ptr<std::function<void(ErrorCode)>>;
+        using Action = std::function<void(ErrorCode)>;
+        using ActionPtr = std::shared_ptr<Action>;
         static inline const ErrorCode &CANCEL_ERROR = net::error::operation_aborted;
 
         /**
          * @brief Enable to invoke callback action
          *
          * @return
+         *
+         * @note All callback in mActions will be invoked if this callback is hit by NotifyOnce()
          */
         EventPtr EnableCallback();
 
@@ -29,7 +32,7 @@ namespace Owl {
          * @param action
          * @return
          */
-        Event &operator+=(const Action &action);
+        Event &operator+=(const ActionPtr &action);
 
         /**
          * @brief Remove a callback
@@ -37,7 +40,7 @@ namespace Owl {
          * @param action
          * @return
          */
-        Event &operator-=(const Action &action);
+        Event &operator-=(const ActionPtr &action);
 
         /**
          * @brief Notify for all objects awaiting on this event
@@ -64,7 +67,7 @@ namespace Owl {
         explicit Event(const net::executor &executor);
 
         net::steady_timer mTimer;
-        std::unordered_set<Action> mActions;
+        std::unordered_set<ActionPtr> mActions;
         bool mCallbackEnabled = false;
     };
 
