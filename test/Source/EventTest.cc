@@ -23,10 +23,10 @@ Awaitable<void> WaitBeforeNotifyHelper(Event &event, Status &status) {
 
 Awaitable<void> WaitBeforeNotify(Status &status) {
     const net::executor &executor = co_await net::this_coro::executor;
-    Event event(executor);
-    net::co_spawn(executor, [&] { return WaitBeforeNotifyHelper(event, status); }, net::detached);
+    EventPtr eventPtr = Event::NewInstance(executor);
+    net::co_spawn(executor, [&] { return WaitBeforeNotifyHelper(*eventPtr, status); }, net::detached);
     status = status == INITIALIZED ? WAITING : status;
-    co_await event.AsyncWait();
+    co_await eventPtr->AsyncWait();
     status = status == NOTIFIED ? FINISHED : status;
 }
 
@@ -53,8 +53,8 @@ Awaitable<void> WaitAfterNotifyHelper(Event &event, Status &status) {
 
 Awaitable<void> WaitAfterNotify(TimeoutEvent &timeoutEvent, Status &status) {
     const net::executor &executor = co_await net::this_coro::executor;
-    Event event(executor);
-    net::co_spawn(executor, [&] { return WaitAfterNotifyHelper(event, status); }, net::detached);
+    EventPtr eventPtr = Event::NewInstance(executor);
+    net::co_spawn(executor, [&] { return WaitAfterNotifyHelper(*eventPtr, status); }, net::detached);
 
     spdlog::debug("Wait for 100 ms");
     net::steady_timer timer(executor);
@@ -63,7 +63,7 @@ Awaitable<void> WaitAfterNotify(TimeoutEvent &timeoutEvent, Status &status) {
 
     status = status == NOTIFIED ? WAITING : status;
     spdlog::debug("Waiting for notifying");
-    co_await event.AsyncWait();
+    co_await eventPtr->AsyncWait();
     spdlog::debug("Completed the wait");
     status = status == WAITING ? FINISHED : status;
     timeoutEvent.Cancel();
@@ -96,16 +96,16 @@ Awaitable<void> NotifyOnceHelper(int &count, Event &event) {
 
 TEST(Event, Notify_Once) {
     net::io_context ioContext;
-    Event event(ioContext.get_executor());
+    EventPtr eventPtr = Event::NewInstance(ioContext.get_executor())->EnableCallback();
     int count = 0;
 
     for (int i = 0; i < 10; ++i) {
-        net::co_spawn(ioContext.get_executor(), [&] { return NotifyOnceHelper(count, event); }, net::detached);
+        net::co_spawn(ioContext.get_executor(), [&] { return NotifyOnceHelper(count, *eventPtr); }, net::detached);
     }
 
     TimeoutEvent notifyEvent([&](const TimeoutEvent::ErrorCode &errorCode) {
         if (errorCode != TimeoutEvent::CANCEL_ERROR) {
-            event.NotifyOnce();
+            eventPtr->NotifyOnce();
         }
     });
     notifyEvent.Run(ioContext.get_executor(), TimeoutEvent::Timeout(10));
@@ -118,5 +118,6 @@ TEST(Event, Notify_Once) {
     stopIoContextEvent.Run(ioContext.get_executor(), TimeoutEvent::Timeout(20));
 
     ioContext.run();
+
     ASSERT_EQ(count, 1);
 }
