@@ -4,6 +4,18 @@
 #include <type_traits>
 
 namespace Owl {
+    /**
+     *
+     * @tparam T
+     *
+     * @code
+       class A : public EnableSharedInstance<A>,
+                     public std::enable_shared_from_this<A> {
+       protected:
+           A() = default;
+       }
+     * @endcode
+     */
     template<typename T>
     class EnableSharedInstance {
     public:
