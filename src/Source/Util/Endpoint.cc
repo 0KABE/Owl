@@ -5,8 +5,8 @@
 Owl::Endpoint::Endpoint(Socket socket)
         : mSocket(std::move(socket)),
           mConnectingEvent(Event::NewInstance(socket.get_executor())),
-          mHostname(socket.remote_endpoint().address().to_string()),
-          mPort(std::to_string(socket.remote_endpoint().port())),
+          mHostname(mSocket.remote_endpoint().address().to_string()),
+          mPort(std::to_string(mSocket.remote_endpoint().port())),
           mHostnameType(ParseHostnameType(mHostname)) {}
 
 Owl::Endpoint::Endpoint(Executor &executor, Hostname hostname, Port port)
