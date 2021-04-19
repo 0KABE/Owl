@@ -27,6 +27,7 @@ Owl::Awaitable<Owl::Bound::TargetEndpoint> Owl::Socks5Server::Initialize() {
 
 Owl::Awaitable<Owl::Bound::TargetEndpoint> Owl::Socks5Server::Handshake() {
     using namespace ProtocolDetail;
+    const net::executor &executor = co_await net::this_coro::executor;
 
     TargetEndpoint endpoint;
 
@@ -42,7 +43,7 @@ Owl::Awaitable<Owl::Bound::TargetEndpoint> Owl::Socks5Server::Handshake() {
     if (request.Ver == VERSION) {
         switch (request.Cmd) {
             case CONNECT:
-                endpoint = Endpoint(request.DstAddress.Format(Socks5AddressType(request.AType)),
+                endpoint = Endpoint(executor, request.DstAddress.Format(Socks5AddressType(request.AType)),
                                     std::to_string(request.Port));
                 reply = {.Ver     = VERSION,
                         .Rep     = SUCCEEDED,

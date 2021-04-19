@@ -16,10 +16,11 @@ namespace Owl {
         using Verb = boost::beast::http::verb;
         using Request = boost::beast::http::request<RequestBody>;
         using Response = boost::beast::http::response<ResponseBody>;
+        using Executor = const net::executor;
 
-        HttpClient(Url url, ProxyNode::ProxyPtr proxyNode)
+        HttpClient(Executor &executor, Url url, ProxyNode::ProxyPtr proxyNode)
                 : mUrl(std::move(url)), mProxyNode(std::move(proxyNode)),
-                  mOutbound(mProxyNode->GetOutbound(Endpoint(mUrl.GetHost(), mUrl.GetPort()))) {}
+                  mOutbound(mProxyNode->GetOutbound(Endpoint(executor, mUrl.GetHost(), mUrl.GetPort()))) {}
 
         template<Verb HttpVerb = Verb::get, int HttpVersion = 10>
         HttpClient &BuildRequest(typename RequestBody::value_type body) {
