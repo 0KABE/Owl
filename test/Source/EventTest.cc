@@ -96,7 +96,7 @@ Awaitable<void> NotifyOnceHelper(int &count, Event &event) {
 
 TEST(Event, Notify_Once) {
     net::io_context ioContext;
-    EventPtr eventPtr = Event::NewInstance(ioContext.get_executor())->EnableCallback();
+    EventPtr eventPtr = Event::NewInstance(ioContext.get_executor());
     int count = 0;
 
     for (int i = 0; i < 10; ++i) {
