@@ -7,56 +7,69 @@
 #include "Event.hpp"
 #include "FinalAction.hpp"
 #include "TimeoutEvent.hpp"
+#include "Delegate.hpp"
 
 namespace Owl {
     class Endpoint {
     public:
         enum ConnectionState {
-            READY_TO_CONNECT, CONNECTING, CONNECTED, FAIL_TO_CONNECT
+            READY,
+            CONNECTING,
+            CONNECTED,
+            DISCONNECTED
         };
         enum HostnameType {
             HOST_DOMAIN, HOST_IP
         };
 
-        using ResolveResult = boost::asio::ip::basic_resolver_results<boost::asio::ip::tcp>;
         using Socket = net::ip::tcp::socket;
-        using OptionalSocket = std::optional<Socket>;
-        using OptionalEvent = std::optional<Event>;
-        using Timeout = std::chrono::milliseconds;
+        using Hostname = std::string;
+        using Port = std::string;
+        using Executor = const net::executor;
+        using Milliseconds = std::chrono::milliseconds;
         using Resolver = net::ip::tcp::resolver;
+        using ResolveResult = boost::asio::ip::basic_resolver_results<boost::asio::ip::tcp>;
+
 
         explicit Endpoint(Socket socket);
 
-        Endpoint(std::string hostname, std::string port);
+        Endpoint(Executor &executor, Hostname hostname, Port port);
 
-        Awaitable<void> Connect(Timeout timeout = Timeout(500));
 
-        [[nodiscard]] const ConnectionState &GetState() const;
+        Awaitable<void> Connect(Milliseconds timeout = Milliseconds(500));
+
+        void Disconnect();
+
+        [[nodiscard]] Socket &GetSocket();
 
         [[nodiscard]] const std::string &GetHostname() const;
 
         [[nodiscard]] const std::string &GetPort() const;
 
-        [[nodiscard]] Socket &GetSocket();
+        [[nodiscard]] HostnameType GetHostnameType() const;
 
-        [[nodiscard]] const HostnameType &GetHostnameType() const;
+        [[nodiscard]] ConnectionState GetState() const;
 
-        std::string ToString() const;
+        [[nodiscard]] std::string ToString() const;
+
 
     private:
         static HostnameType ParseHostnameType(const std::string &hostname);
 
-        Awaitable<ResolveResult> Resolve();
+        static const char *StatusToString(ConnectionState state);
 
-        Awaitable<void> TryConnect(ResolveResult &resolveResult, Timeout timeout);
+        Owl::Awaitable<void> StartConnecting(Milliseconds timeout);
 
-        OptionalSocket mOptionalSocket;
-        OptionalEvent mConnectCompleted;
+        Awaitable<ResolveResult> ResolveHostname();
+
+        Awaitable<void> TryConnect(ResolveResult &resolveResult, Milliseconds timeout);
+
+        Socket mSocket;
+        EventPtr mConnectingEvent;
         std::string mHostname;
         std::string mPort;
-        ConnectionState mState = READY_TO_CONNECT;
         HostnameType mHostnameType;
+        ConnectionState mState = READY;
+        Delegate<> mDelegate;
     };
 }
-
-
