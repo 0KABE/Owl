@@ -38,6 +38,10 @@ namespace Owl {
             co_return mResponse;
         }
 
+        void Stop() {
+            mOutbound->Shutdown();
+        }
+
         Awaitable<void> SendRequest() {
             spdlog::trace("Sending HTTP request to {} via {}", mUrl.GetUrl(), mProxyNode->GetName());
             Buffer buffer;

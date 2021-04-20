@@ -6,3 +6,7 @@ Owl::Bound::Bound(Endpoint endpoint, BufferSize bufferSize)
 Owl::Endpoint &Owl::Bound::GetEndpoint() { return mEndpoint; }
 
 Owl::Buffer &Owl::Bound::GetReceiveBuffer() { return mBuffer; }
+
+void Owl::Bound::Shutdown() {
+    mEndpoint.Disconnect();
+}
