@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
-#include "Util/DelayTest.hpp"
+#include "Util/DelayTester.hpp"
 #include "Proxy/ProxyNodeManager.hpp"
 
 using namespace Owl;
 
-Awaitable<void> TestLatency(DelayTest::Delay &delay, std::string url, ProxyNode::ProxyPtr proxyPtr) {
-    DelayTest delayTest(url, proxyPtr);
+Awaitable<void> TestLatency(DelayTester::Delay &delay, std::string url, ProxyNode::ProxyPtr proxyPtr) {
+    DelayTester delayTest(url, proxyPtr);
     delay = co_await delayTest.TestDelay();
 }
 
@@ -13,7 +13,7 @@ TEST(DelayTest, Success) {
     net::io_context ioContext;
     std::string url = "http://info.cern.ch";
 
-    DelayTest::Delay delay;
+    DelayTester::Delay delay;
     net::co_spawn(ioContext.get_executor(),
                   [&] {
                       return TestLatency(delay, url, ProxyNodeManager::GetInstance().GetProxy("DIRECT"));
@@ -29,7 +29,7 @@ TEST(DelayTest, Failure) {
     net::io_context ioContext;
     std::string url = "http://www.google.com";
 
-    DelayTest::Delay delay;
+    DelayTester::Delay delay;
     net::co_spawn(ioContext.get_executor(),
                   [&] {
                       return TestLatency(delay, url, ProxyNodeManager::GetInstance().GetProxy("DIRECT"));

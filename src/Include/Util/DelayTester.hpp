@@ -4,11 +4,11 @@
 #include "ProxyNode.hpp"
 
 namespace Owl {
-    class DelayTest {
+    class DelayTester {
     public:
         using Delay = std::optional<std::chrono::milliseconds>;
 
-        DelayTest(std::string url, ProxyNode::ProxyPtr proxyPtr);
+        DelayTester(std::string url, ProxyNode::ProxyPtr proxyPtr);
 
         Awaitable<Delay> TestDelay(TimeoutEvent::Timeout timeout = TimeoutEvent::Timeout(5000));
 
