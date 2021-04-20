@@ -2,31 +2,33 @@
 
 #include <memory>
 #include <type_traits>
+#include "Util/Concepts.hpp"
 
 namespace Owl {
     /**
      *
-     * @tparam T
+     * @tparam BaseClass
      *
      * @code
-       class A : public EnableSharedInstance<A>,
-                     public std::enable_shared_from_this<A> {
+       class A : public EnableSharedInstance<A> {
        protected:
            A() = default;
        }
      * @endcode
      */
-    template<typename T>
+    template<typename BaseClass>
     class EnableSharedInstance {
     public:
-        template<typename ...Args>
-        static std::shared_ptr<T> NewInstance(Args &&...args) {
-            return std::make_shared<EnableMakeShared>(std::forward<Args>(args)...);
+        template<typename DerivedClass = BaseClass, typename ...Args>
+        requires std::is_base_of_v<BaseClass, DerivedClass>
+        static std::shared_ptr<BaseClass> NewInstance(Args &&...args) {
+            return std::make_shared<EnableMakeShared < DerivedClass>>(std::forward<Args>(args)...);
         }
 
-        struct EnableMakeShared : public T {
+        template<typename Base>
+        struct EnableMakeShared : public Base {
             template<typename ...Args>
-            explicit EnableMakeShared(Args &&...args) : T(std::forward<Args>(args)...) {}
+            explicit EnableMakeShared(Args &&...args) : Base(std::forward<Args>(args)...) {}
         };
     };
 }
