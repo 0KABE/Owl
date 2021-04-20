@@ -120,30 +120,3 @@ TEST(Event, Notify_Once) {
     ioContext.run();
     ASSERT_EQ(count, 1);
 }
-
-TEST(Event, Callback) {
-    net::io_context ioContext;
-    EventPtr eventPtr = Event::NewInstance(ioContext.get_executor())->EnableCallback()->EnableCallback();
-    int count = 0;
-
-    (*eventPtr) += std::make_shared<Event::Action>([&](Event::ErrorCode errorCode) {
-        ++count;
-    });
-
-    TimeoutEvent timeoutEvent([&](TimeoutEvent::ErrorCode errorCode) {
-        if (errorCode != TimeoutEvent::CANCEL_ERROR)
-            eventPtr->NotifyOnce();
-    });
-    timeoutEvent.Run(ioContext.get_executor(), TimeoutEvent::Timeout(10));
-
-    TimeoutEvent stopIoContextEvent([&](TimeoutEvent::ErrorCode errorCode) {
-        if (errorCode != TimeoutEvent::CANCEL_ERROR) {
-            ioContext.stop();
-        }
-    });
-    stopIoContextEvent.Run(ioContext.get_executor(), TimeoutEvent::Timeout(20));
-
-    ioContext.run();
-
-    ASSERT_EQ(count, 1);
-}
