@@ -12,6 +12,12 @@ namespace Owl {
         int port;
         std::map<std::u32string, std::u32string> properties;
     };
+    struct PolicyInfo {
+        std::u32string name;
+        std::u32string type;
+        std::vector<std::u32string> proxies;
+        std::map<std::u32string, std::u32string> properties;
+    };
     struct RuleInfo {
         std::u32string type;
         std::u32string value;
@@ -19,6 +25,7 @@ namespace Owl {
     };
     struct ConfInfo {
         std::vector<ProxyInfo> proxies;
+        std::vector<PolicyInfo> policies;
         std::vector<RuleInfo> rules;
     };
 
