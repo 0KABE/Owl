@@ -22,6 +22,26 @@ TEST(ConfigurationParser, Proxy) {
     ASSERT_EQ(confInfo.proxies[1].properties[U"interval"], U"100");
 }
 
+TEST(ConfigurationParser, Policy) {
+    using namespace Owl;
+
+    Owl::ConfigurationParser configurationParser("../../test/Source/ConfigurationParser-Policy.txt");
+    ConfInfo confInfo = configurationParser.Parse();
+
+    ASSERT_EQ(confInfo.policies[0].name, U"🇭🇰 HK");
+    ASSERT_EQ(confInfo.policies[0].type, U"static");
+    ASSERT_EQ(confInfo.policies[0].proxies[0], U"🇭🇰 香港 IEPL 03");
+    ASSERT_EQ(confInfo.policies[0].proxies[1], U"🇭🇰 香港 IPLC 02");
+    ASSERT_EQ(confInfo.policies[0].proxies[2], U"🇭🇰 香港 IPLC 01");
+    ASSERT_EQ(confInfo.policies[0].properties.size(), 0);
+
+    ASSERT_EQ(confInfo.policies[1].name, U"🇺🇸 US");
+    ASSERT_EQ(confInfo.policies[1].type, U"auto");
+    ASSERT_EQ(confInfo.policies[1].proxies[0], U"🇺🇸 美国 BGP");
+    ASSERT_EQ(confInfo.policies[1].properties.size(), 1);
+    ASSERT_EQ(confInfo.policies[1].properties[U"interval"], U"100");
+}
+
 TEST(ConfigurationParser, Rule) {
     using namespace Owl;
 
