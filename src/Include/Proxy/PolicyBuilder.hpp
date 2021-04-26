@@ -50,8 +50,8 @@ namespace Owl {
 
         std::string mName;
         std::vector<ProxyGroup::ProxyPtr> mProxies;
-        std::chrono::seconds mPeriod;
-        std::string mUrl;
+        std::chrono::seconds mPeriod = std::chrono::seconds(600);
+        std::string mUrl = "http://connectivitycheck.gstatic.com/generate_204";
         ProxyGroup::ProxyGroupPtr mProxyGroupPtr;
     };
 }
