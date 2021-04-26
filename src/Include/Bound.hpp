@@ -16,7 +16,7 @@ namespace Owl {
 
         virtual Awaitable<void> Send(Buffer &buffer) = 0;
 
-        virtual Awaitable <std::reference_wrapper<Buffer>> Receive() = 0;
+        virtual Awaitable<std::reference_wrapper<Buffer>> Receive() = 0;
 
         Endpoint &GetEndpoint();
 
