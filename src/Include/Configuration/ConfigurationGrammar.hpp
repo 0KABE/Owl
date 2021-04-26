@@ -30,21 +30,20 @@ namespace Owl {
         ConfigurationGrammar() : ConfigurationGrammar::base_type(conf) {
             using namespace qi::standard_wide;
 
-            //TODO find a way to skip prefix space at the beginning of the config
             conf %= proxies ^ policies ^ rules;
 
-            proxies %= "[Proxy]" >> +eol >> *proxy;
+            proxies %= qi::omit[*space] >> "[Proxy]" >> +eol >> *proxy;
             proxy %= name >> "=" >> protocol >> "," >> server >> "," >> port >> "," >> property % "," >> termination;
             protocol %= +alpha;
             server %= +(alnum | char_("-._!"));
             port %= int_;
 
-            policies %= "[Policy]" >> +eol >> *policy;
+            policies %= qi::omit[*space] >> "[Policy]" >> +eol >> *policy;
             policy %= name >> '=' >> type >> ',' >> (!property >> name) % ','
                            >> -(',' >> property % ',') >> termination;
             type %= +alpha;
 
-            rules %= "[Rule]" >> +eol >> *rule;
+            rules %= qi::omit[*space] >> "[Rule]" >> +eol >> *rule;
             rule %= ruleType >> ',' >> -hold[ruleValue >> ','] >> name >> termination;
             ruleType %= +(alpha | char_("-_"));
             ruleValue %= +(alnum | char_(".-_!/"));
