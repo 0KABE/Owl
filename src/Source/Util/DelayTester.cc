@@ -21,6 +21,6 @@ Owl::Awaitable<Owl::DelayTester::Delay> Owl::DelayTester::TestDelay(TimeoutEvent
         co_return std::chrono::duration_cast<std::chrono::milliseconds>(endPoint - startPoint).count();
     } catch (std::exception &exception) {
         spdlog::warn("Test Delay to {} failed, exception: {}", mUrl, exception.what());
-        co_return Delay();
+        co_return std::nullopt;
     }
 }

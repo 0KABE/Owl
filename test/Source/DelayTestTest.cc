@@ -38,5 +38,4 @@ TEST(DelayTest, Failure) {
     ioContext.run();
 
     ASSERT_EQ(delay.has_value(), false);
-    spdlog::info("Delay of connecting to {}: {}ms", url, delay.value().count());
 }
