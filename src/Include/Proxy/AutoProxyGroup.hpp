@@ -14,7 +14,7 @@ namespace Owl {
 
         Outbound::BoundPtr GetOutbound(Endpoint endpoint) const override;
 
-        void Start(net::executor &executor) override;
+        void Start(const net::executor &executor) override;
 
     private:
 

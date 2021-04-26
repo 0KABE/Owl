@@ -3,6 +3,7 @@
 #include "ProxyNode.hpp"
 
 namespace Owl {
+    //TODO rename to Policy
     class ProxyGroup : public ProxyNode,
                        public std::enable_shared_from_this<ProxyGroup>,
                        public EnableSharedInstance<ProxyGroup> {
@@ -13,13 +14,16 @@ namespace Owl {
             RUNNING, CLOSED
         };
 
+        void SetProxies(const std::vector<ProxyPtr> &proxies);
+
         void SetSelectedProxy(ProxyPtr &selectedProxyPtr);
 
+        //TODO need to guarantee selectedProxy is not null
         const ProxyPtr &GetSelectedProxy() const;
 
         [[nodiscard]] virtual std::string GetPolicyType() const = 0;
 
-        virtual void Start(net::executor &executor);
+        virtual void Start(const net::executor &executor);
 
         void Close();
 

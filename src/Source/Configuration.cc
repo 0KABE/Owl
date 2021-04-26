@@ -4,18 +4,21 @@
 #include "Rule/RuleManager.hpp"
 #include "Rule/RuleFactory.hpp"
 #include "Proxy/ProxyNodeManager.hpp"
+#include "Proxy/PolicyBuilder.hpp"
 #include "Proxy/ExternalProxyNode.hpp"
 #include "Pipeline/Crypto/CryptoFactory.hpp"
 #include "Pipeline/SimpleObfsClient/SimpleObfsClientFactory.hpp"
 #include <spdlog/spdlog.h>
+#include <Proxy/StaticProxyGroup.hpp>
 
-void Owl::Configuration::Load(const std::string &path) {
+void Owl::Configuration::Load(const std::string &path, const net::executor &executor) {
     spdlog::info("Loading configuration: {}", path);
 
     ConfigurationParser parser(path);
     ConfInfo confInfo = parser.Parse();
 
     RegisterProxy(confInfo);
+    RegisterPolicy(confInfo, executor);
     RegisterRule(confInfo);
 }
 
@@ -34,7 +37,7 @@ void Owl::Configuration::RegisterRule(const Owl::ConfInfo &confInfo) {
         std::string type = boost::locale::conv::utf_to_utf<char>(ruleInfo.type);
         std::string value = boost::locale::conv::utf_to_utf<char>(ruleInfo.value);
         std::string policy = boost::locale::conv::utf_to_utf<char>(ruleInfo.policy);
-        ruleManager.AddRule(ruleFactory.Create(type, proxyNodeManager.GetProxy(policy), value));
+        ruleManager.AddRule(ruleFactory.Create(type, proxyNodeManager.GetProxyOrPolicy(policy), value));
     });
 }
 
@@ -50,8 +53,46 @@ void Owl::Configuration::RegisterProxy(const Owl::ConfInfo &confInfo) {
         std::string port = std::to_string(proxyInfo.port);
         ExternalProxyNode::ProxyPtr proxyPtr
                 = std::make_shared<ExternalProxyNode>(name, server, port, BuildProxyPipelineGenerators(proxyInfo));
-        proxyNodeManager.AddProxy(proxyPtr);
+        proxyNodeManager.AddProxyNode(proxyPtr);
     });
+}
+
+void Owl::Configuration::RegisterPolicy(const ConfInfo &confInfo, const net::executor &executor) {
+    using boost::locale::conv::utf_to_utf;
+    ProxyNodeManager &proxyNodeManager = ProxyNodeManager::GetInstance();
+
+    //Register all polices
+    for (const PolicyInfo &policyInfo : confInfo.policies) {
+        PolicyBuilder policyBuilder;
+        policyBuilder.SetName(utf_to_utf<char>(policyInfo.name));
+
+        //Exclude Static Policy
+        if (utf_to_utf<char>(policyInfo.type) != StaticProxyGroup::TYPE) {
+            if (policyInfo.properties.contains(U"interval")) {
+                std::string interval = utf_to_utf<char>(policyInfo.properties.at(U"interval"));
+                policyBuilder.SetPeriod(std::chrono::seconds(std::stoul(interval)));
+            }
+            if (policyInfo.properties.contains(U"url")) {
+                std::string url = utf_to_utf<char>(policyInfo.properties.at(U"url"));
+                policyBuilder.SetUrl(url);
+            }
+        }
+        proxyNodeManager.AddPolicy(policyBuilder.Build(utf_to_utf<char>(policyInfo.type)));
+    }
+
+    //Update relative proxies
+    for (const PolicyInfo &policyInfo : confInfo.policies) {
+        ProxyGroup::ProxyGroupPtr proxyGroupPtr = proxyNodeManager.GetPolicy(utf_to_utf<char>(policyInfo.name));
+
+        std::vector<ProxyGroup::ProxyPtr> proxies;
+        for (const std::u32string &proxyName : policyInfo.proxies) {
+            ProxyGroup::ProxyPtr proxy = proxyNodeManager.GetProxyOrPolicy(utf_to_utf<char>(proxyName));
+            proxies.push_back(proxy);
+        }
+
+        proxyGroupPtr->SetProxies(proxies);
+        proxyGroupPtr->Start(executor);
+    }
 }
 
 Owl::ExternalProxyNode::PipelineGenerators

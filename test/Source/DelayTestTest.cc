@@ -16,7 +16,7 @@ TEST(DelayTest, Success) {
     DelayTester::Delay delay;
     net::co_spawn(ioContext.get_executor(),
                   [&] {
-                      return TestLatency(delay, url, ProxyNodeManager::GetInstance().GetProxy("DIRECT"));
+                      return TestLatency(delay, url, ProxyNodeManager::GetInstance().GetBuiltInProxyNode("DIRECT"));
                   },
                   net::detached);
     ioContext.run();
@@ -32,7 +32,7 @@ TEST(DelayTest, Failure) {
     DelayTester::Delay delay;
     net::co_spawn(ioContext.get_executor(),
                   [&] {
-                      return TestLatency(delay, url, ProxyNodeManager::GetInstance().GetProxy("DIRECT"));
+                      return TestLatency(delay, url, ProxyNodeManager::GetInstance().GetBuiltInProxyNode("DIRECT"));
                   },
                   net::detached);
     ioContext.run();

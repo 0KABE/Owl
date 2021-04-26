@@ -26,7 +26,7 @@ TEST(HttpClient, Direct) {
     net::io_context ioContext;
     std::string url = "http://info.cern.ch";
     std::string message;
-    ProxyNode::ProxyPtr proxyNode = ProxyNodeManager::GetInstance().GetProxy("DIRECT");
+    ProxyNode::ProxyPtr proxyNode = ProxyNodeManager::GetInstance().GetBuiltInProxyNode("DIRECT");
 
     net::co_spawn(ioContext.get_executor(), [&] { return DirectHelper(message, url, proxyNode); }, net::detached);
     ioContext.run();

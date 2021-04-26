@@ -3,7 +3,7 @@
 #include "Proxy/ProxyNodeManager.hpp"
 
 Owl::RuleManager::RuleManager() {
-    ProxyNode::ProxyPtr directProxyPtr = ProxyNodeManager::GetInstance().GetProxy("DIRECT");
+    ProxyNode::ProxyPtr directProxyPtr = ProxyNodeManager::GetInstance().GetBuiltInProxyNode("DIRECT");
     mRuleCollection.push_back(RuleFactory::GetInstance().Create("FINAL", directProxyPtr, ""));
 }
 

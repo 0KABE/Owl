@@ -13,9 +13,10 @@ int main(int argc, char *argv[]) {
 
     spdlog::set_level(spdlog::level::from_str(cliOptions.logLevel));
 
-    Owl::Configuration::Load(cliOptions.config);
-
     Owl::net::io_context ioContext;
+
+    Owl::Configuration::Load(cliOptions.config, ioContext.get_executor());
+
     Owl::Server<Owl::RelayConnection>::ServerPtr server
             = Owl::Server<Owl::RelayConnection>::Create(ioContext.get_executor(), 9999);
     ioContext.run();

@@ -1,4 +1,5 @@
 #include "Proxy/AutoProxyGroup.hpp"
+#include "Proxy/PolicyBuilder.hpp"
 
 #include <utility>
 #include <Util/DelayTester.hpp>
@@ -17,7 +18,7 @@ Owl::Outbound::BoundPtr Owl::AutoProxyGroup::GetOutbound(Owl::Endpoint endpoint)
     return mSelectedProxy->GetOutbound(std::move(endpoint));
 }
 
-void Owl::AutoProxyGroup::Start(boost::asio::executor &executor) {
+void Owl::AutoProxyGroup::Start(const net::executor &executor) {
     net::co_spawn(executor,
                   [=, self = shared_from_this()] { return ConnectivityTest(); },
                   net::detached);
@@ -28,6 +29,7 @@ Owl::Awaitable<void> Owl::AutoProxyGroup::ConnectivityTest() {
     net::steady_timer timer(executor);
 
     do {
+        spdlog::info("Start in testing Policy: {}", mName);
         ProxyPtr selectedProxy;
         TimeoutEvent::Timeout minLatency = TimeoutEvent::Timeout::max();
         for (const ProxyPtr &proxyPtr : mProxies) {
@@ -50,3 +52,5 @@ Owl::Awaitable<void> Owl::AutoProxyGroup::ConnectivityTest() {
         co_await timer.async_wait(use_awaitable);
     } while (mStatus == RUNNING);
 }
+
+static Owl::PolicyBuilder::Register<Owl::AutoProxyGroup> r(Owl::AutoProxyGroup::TYPE);

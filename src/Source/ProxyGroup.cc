@@ -12,11 +12,16 @@ void Owl::ProxyGroup::SetSelectedProxy(ProxyPtr &selectedProxyPtr) {
     mSelectedProxy = selectedProxyPtr;
 }
 
+void Owl::ProxyGroup::SetProxies(const std::vector<ProxyPtr> &proxies) {
+    mProxies = proxies;
+    mSelectedProxy = mProxies.empty() ? nullptr : mProxies.front();
+}
+
 const Owl::ProxyNode::ProxyPtr &Owl::ProxyGroup::GetSelectedProxy() const { return mSelectedProxy; }
 
-void Owl::ProxyGroup::Start(boost::asio::executor &executor) {}
+void Owl::ProxyGroup::Start(const net::executor &executor) {}
 
 void Owl::ProxyGroup::Close() { mStatus = CLOSED; }
 
 Owl::ProxyGroup::ProxyGroup(std::string name, std::vector<ProxyPtr> proxies)
-        : ProxyNode(std::move(name)), mProxies(std::move(proxies)), mSelectedProxy(proxies.at(0)) {}
+        : ProxyNode(std::move(name)), mProxies(std::move(proxies)) {}
