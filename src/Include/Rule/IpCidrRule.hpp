@@ -7,11 +7,11 @@ namespace Owl {
     public:
         using IpCidrRulePtr = std::unique_ptr<IpCidrRule>;
 
-        IpCidrRule(ProxyNode::ProxyPtr proxyPtr, uint32_t ip, uint32_t mask);
+        IpCidrRule(ProxyPtr proxyPtr, uint32_t ip, uint32_t mask);
 
         bool Match(const Endpoint &endpoint) override;
 
-        static IpCidrRulePtr Create(const ProxyNode::ProxyPtr &proxyPtr, const std::string &rule);
+        static IpCidrRulePtr Create(const ProxyPtr &proxyPtr, const std::string &rule);
 
     private:
         uint32_t mIp;

@@ -3,7 +3,7 @@
 Owl::ShadowsocksClient::ShadowsocksClient(Owl::Endpoint endpoint,
                                           Owl::Endpoint proxyEndpoint,
                                           Owl::Bound::BufferSize bufferSize,
-                                          Owl::Pipeline::PipelinePtr pipelinePtr)
+                                          Owl::PipelinePtr pipelinePtr)
         : Outbound(std::move(endpoint), bufferSize),
           mPipelinePtr(std::move(pipelinePtr)),
           mProxyEndpoint(std::move(proxyEndpoint)) {}

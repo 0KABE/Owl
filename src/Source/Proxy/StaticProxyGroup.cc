@@ -4,7 +4,7 @@
 Owl::StaticProxyGroup::StaticProxyGroup(const std::string &name,
                                         const std::vector<ProxyPtr> &proxies,
                                         const std::chrono::seconds &period,
-                                        std::string url) : ProxyGroup(name, proxies) {}
+                                        std::string url) : Policy(name, proxies) {}
 
 std::string Owl::StaticProxyGroup::GetPolicyType() const {
     return TYPE;

@@ -7,11 +7,11 @@ namespace Owl {
     public:
         using DomainKeywordRulePtr = std::unique_ptr<DomainKeywordRule>;
 
-        DomainKeywordRule(ProxyNode::ProxyPtr proxyPtr, std::string keyword);
+        DomainKeywordRule(ProxyPtr proxyPtr, std::string keyword);
 
         bool Match(const Endpoint &endpoint) override;
 
-        static DomainKeywordRulePtr Create(const ProxyNode::ProxyPtr &proxyPtr, const std::string &rule);
+        static DomainKeywordRulePtr Create(const ProxyPtr &proxyPtr, const std::string &rule);
 
     private:
         std::string mKeyword;

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ProxyGroup.hpp"
+#include "Policy.hpp"
 
 namespace Owl {
-    class StaticProxyGroup : public ProxyGroup {
+    class StaticProxyGroup : public Policy {
     public:
         static constexpr const char *TYPE = "static";
 

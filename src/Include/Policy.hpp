@@ -3,13 +3,11 @@
 #include "ProxyNode.hpp"
 
 namespace Owl {
-    //TODO rename to Policy
-    class ProxyGroup : public ProxyNode,
-                       public std::enable_shared_from_this<ProxyGroup>,
-                       public EnableSharedInstance<ProxyGroup> {
+    class Policy : public ProxyNode,
+                   public std::enable_shared_from_this<Policy>,
+                   public EnableSharedInstance<Policy> {
     public:
-        using ProxyGroupPtr = std::shared_ptr<ProxyGroup>;
-        using ProxyNode::ProxyPtr;
+        using PolicyPtr = std::shared_ptr<Policy>;
         enum Status {
             RUNNING, CLOSED
         };
@@ -28,12 +26,14 @@ namespace Owl {
         void Close();
 
     protected:
-        ProxyGroup(std::string name, std::vector<ProxyPtr> proxies);
+        Policy(std::string name, std::vector<ProxyPtr> proxies);
 
         std::vector<ProxyPtr> mProxies;
         ProxyPtr mSelectedProxy;
         Status mStatus = RUNNING;
     };
+
+    using PolicyPtr = Policy::PolicyPtr;
 }
 
 

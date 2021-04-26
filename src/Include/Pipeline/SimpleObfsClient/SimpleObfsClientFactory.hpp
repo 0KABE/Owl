@@ -8,9 +8,9 @@ namespace Owl {
     class SimpleObfsClientFactory : public Singleton<SimpleObfsClientFactory> {
         friend Singleton<SimpleObfsClientFactory>;
     public:
-        using GeneratorFun = std::function<SimpleObfsClient::SimpleObfsClientPtr(const std::string &hostname)>;
+        using GeneratorFun = std::function<SimpleObfsClientPtr(const std::string &hostname)>;
 
-        SimpleObfsClient::SimpleObfsClientPtr Build(const std::string &obfsType, const std::string &hostname);
+        SimpleObfsClientPtr Build(const std::string &obfsType, const std::string &hostname);
 
         template<typename T>
         struct Register {

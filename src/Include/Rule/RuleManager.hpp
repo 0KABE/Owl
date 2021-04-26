@@ -9,11 +9,11 @@ namespace Owl {
         friend Singleton<RuleManager>;
 
     public:
-        using RuleCollection = std::deque<Rule::RulePtr>;
+        using RuleCollection = std::deque<RulePtr>;
 
-        void AddRule(Rule::RulePtr rulePtr);
+        void AddRule(RulePtr rulePtr);
 
-        [[nodiscard]] ProxyNode::ProxyPtr Match(const Endpoint &endpoint) const;
+        [[nodiscard]] ProxyPtr Match(const Endpoint &endpoint) const;
 
     private:
         RuleManager();

@@ -30,6 +30,8 @@ namespace Owl {
         Buffer mBuffer;
         bool mUninitialized = true;
     };
+
+    using TargetEndpoint = Bound::TargetEndpoint;
 }
 
 

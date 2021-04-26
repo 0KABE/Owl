@@ -13,6 +13,8 @@ namespace Owl {
 
         virtual Buffer &UnWrap(Buffer &buffer) = 0;
     };
+
+    using PipelinePtr = Pipeline::PipelinePtr;
 }
 
 

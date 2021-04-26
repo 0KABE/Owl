@@ -9,9 +9,9 @@ namespace Owl {
         friend Singleton<CryptoFactory>;
 
     public:
-        using GeneratorFun = std::function<Crypto::PipelinePtr(const std::string &password)>;
+        using GeneratorFun = std::function<PipelinePtr(const std::string &password)>;
 
-        Crypto::PipelinePtr Build(const std::string &method, const std::string &password);
+        PipelinePtr Build(const std::string &method, const std::string &password);
 
         template<typename T>
         struct Register {

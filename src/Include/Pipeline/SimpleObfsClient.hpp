@@ -22,6 +22,8 @@ namespace Owl {
         bool mHandleOBFS = true;
         bool mHandleDeOBFS = true;
     };
+
+    using SimpleObfsClientPtr = SimpleObfsClient::SimpleObfsClientPtr;
 }
 
 

@@ -6,7 +6,7 @@
 #include "Bound/Outbound.hpp"
 #include "Configuration/ConfigurationParser.hpp"
 #include "Proxy/ExternalProxyNode.hpp"
-#include "ProxyGroup.hpp"
+#include "Policy.hpp"
 
 namespace Owl {
     class Configuration {

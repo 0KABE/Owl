@@ -6,7 +6,7 @@
 
 Owl::AutoProxyGroup::AutoProxyGroup(const std::string &name, const std::vector<ProxyPtr> &proxies,
                                     const std::chrono::seconds &period, std::string url)
-        : ProxyGroup(name, proxies),
+        : Policy(name, proxies),
           mPeriod(period),
           mUrl(std::move(url)) {}
 
@@ -34,7 +34,7 @@ Owl::Awaitable<void> Owl::AutoProxyGroup::ConnectivityTest() {
         TimeoutEvent::Timeout minLatency = TimeoutEvent::Timeout::max();
         for (const ProxyPtr &proxyPtr : mProxies) {
             DelayTester delayTest(mUrl, proxyPtr);
-            DelayTester::Delay delay = co_await delayTest.TestDelay(TimeoutEvent::Timeout(1000));
+            Delay delay = co_await delayTest.TestDelay(TimeoutEvent::Timeout(1000));
             spdlog::info("Test latency {}: {}ms", proxyPtr->GetName(), delay->count());
             if (delay && delay < minLatency) {
                 minLatency = delay.value();

@@ -7,17 +7,19 @@ namespace Owl {
     public:
         using RulePtr = std::unique_ptr<Rule>;
 
-        explicit Rule(ProxyNode::ProxyPtr proxyPtr);
+        explicit Rule(ProxyPtr proxyPtr);
 
         virtual ~Rule() = default;
 
         virtual bool Match(const Endpoint &endpoint) = 0;
 
-        [[nodiscard]] const ProxyNode::ProxyPtr &GetProxyPtr() const;
+        [[nodiscard]] const ProxyPtr &GetProxyPtr() const;
 
     protected:
-        ProxyNode::ProxyPtr mProxyPtr;
+        ProxyPtr mProxyPtr;
     };
+
+    using RulePtr = Rule::RulePtr;
 }
 
 

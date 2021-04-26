@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ProxyGroup.hpp"
+#include "Policy.hpp"
 #include "Util/Singleton.hpp"
 
 namespace Owl {
@@ -16,7 +16,7 @@ namespace Owl {
                 }
 
                 policyStore.mGenerators[type] = [](std::string name,
-                                                   std::vector<ProxyGroup::ProxyPtr> proxies,
+                                                   std::vector<ProxyPtr> proxies,
                                                    std::chrono::seconds period,
                                                    std::string url) {
                     return std::make_shared<T>(name, proxies, period, url);
@@ -26,21 +26,21 @@ namespace Owl {
 
         PolicyBuilder &SetName(std::string name);
 
-        PolicyBuilder &AddProxy(const ProxyGroup::ProxyPtr &proxyPtr);
+        PolicyBuilder &AddProxy(const ProxyPtr &proxyPtr);
 
         PolicyBuilder &SetPeriod(std::chrono::seconds period);
 
         PolicyBuilder &SetUrl(std::string url);
 
-        ProxyGroup::ProxyGroupPtr Build(const std::string &type);
+        PolicyPtr Build(const std::string &type);
 
     private:
         struct PolicyStore : public Singleton<PolicyStore> {
             friend Singleton<PolicyStore>;
-            using PolicyGenerator = std::function<ProxyGroup::ProxyGroupPtr(std::string name,
-                                                                            std::vector<ProxyGroup::ProxyPtr> proxies,
-                                                                            std::chrono::seconds period,
-                                                                            std::string url)>;
+            using PolicyGenerator = std::function<PolicyPtr(std::string name,
+                                                                    std::vector<ProxyPtr> proxies,
+                                                                    std::chrono::seconds period,
+                                                                    std::string url)>;
 
             std::unordered_map<std::string, PolicyGenerator> mGenerators;
 
@@ -49,10 +49,10 @@ namespace Owl {
         };
 
         std::string mName;
-        std::vector<ProxyGroup::ProxyPtr> mProxies;
+        std::vector<ProxyPtr> mProxies;
         std::chrono::seconds mPeriod = std::chrono::seconds(600);
         std::string mUrl = "http://connectivitycheck.gstatic.com/generate_204";
-        ProxyGroup::ProxyGroupPtr mProxyGroupPtr;
+        PolicyPtr mProxyGroupPtr;
     };
 }
 

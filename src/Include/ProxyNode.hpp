@@ -19,6 +19,8 @@ namespace Owl {
     protected:
         std::string mName;
     };
+
+    using ProxyPtr = ProxyNode::ProxyPtr;
 }
 
 

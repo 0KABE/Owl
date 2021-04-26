@@ -18,7 +18,7 @@ namespace Owl {
         using Response = boost::beast::http::response<ResponseBody>;
         using Executor = const net::executor;
 
-        HttpClient(Executor &executor, Url url, ProxyNode::ProxyPtr proxyNode)
+        HttpClient(Executor &executor, Url url, ProxyPtr proxyNode)
                 : mUrl(std::move(url)), mProxyNode(std::move(proxyNode)),
                   mOutbound(mProxyNode->GetOutbound(Endpoint(executor, mUrl.GetHost(), mUrl.GetPort()))) {}
 
@@ -79,7 +79,7 @@ namespace Owl {
 
     private :
         const Url mUrl;
-        const ProxyNode::ProxyPtr mProxyNode;
+        const ProxyPtr mProxyNode;
         const Outbound::BoundPtr mOutbound;
         Request mRequest;
         Response mResponse;

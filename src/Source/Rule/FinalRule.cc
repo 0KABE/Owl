@@ -3,7 +3,7 @@
 
 bool Owl::FinalRule::Match(const Owl::Endpoint &endpoint) { return true; }
 
-Owl::FinalRule::FinalRulePtr Owl::FinalRule::Create(const Owl::ProxyNode::ProxyPtr &proxyPtr, const std::string &rule) {
+Owl::FinalRule::FinalRulePtr Owl::FinalRule::Create(const Owl::ProxyPtr &proxyPtr, const std::string &rule) {
     return std::make_unique<FinalRule>(proxyPtr);
 }
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ProxyGroup.hpp"
+#include "Policy.hpp"
 
 namespace Owl {
-    class AutoProxyGroup : public ProxyGroup {
+    class AutoProxyGroup : public Policy {
     public:
         static constexpr const char *TYPE = "auto";
 

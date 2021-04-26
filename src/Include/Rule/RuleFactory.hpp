@@ -7,9 +7,9 @@ namespace Owl {
     class RuleFactory : public Singleton<RuleFactory> {
         friend Singleton<RuleFactory>;
     public:
-        using GenerateFunc = std::function<Rule::RulePtr(ProxyNode::ProxyPtr proxyPtr, std::string rule)>;
+        using GenerateFunc = std::function<RulePtr(ProxyPtr proxyPtr, std::string rule)>;
 
-        Rule::RulePtr Create(const std::string &type, ProxyNode::ProxyPtr proxyPtr, std::string rule);
+        RulePtr Create(const std::string &type, ProxyPtr proxyPtr, std::string rule);
 
         template<typename T>
         struct Register {
@@ -18,7 +18,7 @@ namespace Owl {
                 if (ruleFactory.mRulesGenerators.find(type) != ruleFactory.mRulesGenerators.end())
                     throw std::invalid_argument(type + " has been registered");
                 ruleFactory.mRulesGenerators[type] =
-                        [](ProxyNode::ProxyPtr proxyPtr, std::string rule) { return T::Create(proxyPtr, rule); };
+                        [](ProxyPtr proxyPtr, std::string rule) { return T::Create(proxyPtr, rule); };
             }
         };
 

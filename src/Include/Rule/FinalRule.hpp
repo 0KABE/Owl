@@ -10,7 +10,7 @@ namespace Owl {
 
         bool Match(const Endpoint &endpoint) override;
 
-        static FinalRulePtr Create(const ProxyNode::ProxyPtr &proxyPtr, const std::string &rule);
+        static FinalRulePtr Create(const ProxyPtr &proxyPtr, const std::string &rule);
     };
 }
 

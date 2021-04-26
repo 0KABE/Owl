@@ -7,7 +7,7 @@ Owl::PolicyBuilder &Owl::PolicyBuilder::SetPeriod(std::chrono::seconds period) {
     return *this;
 }
 
-Owl::PolicyBuilder &Owl::PolicyBuilder::AddProxy(const Owl::ProxyNode::ProxyPtr &proxyPtr) {
+Owl::PolicyBuilder &Owl::PolicyBuilder::AddProxy(const Owl::ProxyPtr &proxyPtr) {
     mProxies.push_back(proxyPtr);
     return *this;
 }
@@ -22,7 +22,7 @@ Owl::PolicyBuilder &Owl::PolicyBuilder::SetUrl(std::string url) {
     return *this;
 }
 
-Owl::ProxyGroup::ProxyGroupPtr Owl::PolicyBuilder::Build(const std::string &type) {
+Owl::PolicyPtr Owl::PolicyBuilder::Build(const std::string &type) {
     PolicyStore &policyStore = PolicyStore::GetInstance();
     mProxyGroupPtr = policyStore.mGenerators[type](mName, mProxies, mPeriod, mUrl);
     return mProxyGroupPtr;

@@ -18,7 +18,7 @@ namespace Owl {
         };
 
         ShadowsocksClient(Endpoint endpoint, Endpoint proxyEndpoint, BufferSize bufferSize,
-                          Pipeline::PipelinePtr pipelinePtr);
+                          PipelinePtr pipelinePtr);
 
         Awaitable<void> Send(Buffer &buffer) override;
 
@@ -27,7 +27,7 @@ namespace Owl {
     private:
         Awaitable<void> Initialize();
 
-        Pipeline::PipelinePtr mPipelinePtr;
+        PipelinePtr mPipelinePtr;
         Endpoint mProxyEndpoint;
     };
 }

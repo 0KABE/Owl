@@ -24,7 +24,7 @@ namespace Owl {
         }
 
         static std::unique_ptr<ShadowsocksClient>
-        CreateProxy(Pipeline::PipelinePtr pipelinePtr, Endpoint endpoint, Endpoint proxyEndpoint,
+        CreateProxy(PipelinePtr pipelinePtr, Endpoint endpoint, Endpoint proxyEndpoint,
                     Bound::BufferSize bufferSize = DEFAULT_BUFFER_SIZE) {
             return std::make_unique<ShadowsocksClient>(std::move(endpoint),
                                                        std::move(proxyEndpoint),

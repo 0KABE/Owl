@@ -7,11 +7,11 @@ namespace Owl {
     public:
         using DomainSuffixRulePtr = std::unique_ptr<DomainSuffixRule>;
 
-        DomainSuffixRule(ProxyNode::ProxyPtr proxyPtr, std::string suffix);
+        DomainSuffixRule(ProxyPtr proxyPtr, std::string suffix);
 
         bool Match(const Endpoint &endpoint) override;
 
-        static DomainSuffixRulePtr Create(const ProxyNode::ProxyPtr &proxyPtr, const std::string &rule);
+        static DomainSuffixRulePtr Create(const ProxyPtr &proxyPtr, const std::string &rule);
 
     private:
         std::string mSuffix;

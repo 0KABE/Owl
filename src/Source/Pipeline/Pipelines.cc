@@ -16,7 +16,7 @@ Owl::Buffer &Owl::Pipelines::UnWrap(Owl::Buffer &buffer) {
     return unwrappedBuffer;
 }
 
-void Owl::Pipelines::PushBackPipeline(Owl::Pipeline::PipelinePtr pipelinePtr) {
+void Owl::Pipelines::PushBackPipeline(Owl::PipelinePtr pipelinePtr) {
     mPipelinePtrCollection.push_back(std::move(pipelinePtr));
 }
 

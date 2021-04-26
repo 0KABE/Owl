@@ -20,7 +20,7 @@ Owl::RelayConnection::~RelayConnection() {
 }
 
 Owl::Awaitable<void> Owl::RelayConnection::Initialize() {
-    Bound::TargetEndpoint targetEndpoint = co_await mInbound->Initialize();
+    TargetEndpoint targetEndpoint = co_await mInbound->Initialize();
     mOutbound = Configuration::Match(std::move(*targetEndpoint));
 
     net::co_spawn(mInbound->GetEndpoint().GetSocket().get_executor(),

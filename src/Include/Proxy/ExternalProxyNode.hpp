@@ -6,7 +6,7 @@
 namespace Owl {
     class ExternalProxyNode : public ProxyNode {
     public:
-        using PipelineGenerator = std::function<Pipeline::PipelinePtr()>;
+        using PipelineGenerator = std::function<PipelinePtr()>;
         using PipelineGenerators = std::vector<PipelineGenerator>;
 
         ExternalProxyNode(std::string name, std::string proxyHostname, std::string proxyPort,

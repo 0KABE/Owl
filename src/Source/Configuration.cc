@@ -23,7 +23,7 @@ void Owl::Configuration::Load(const std::string &path, const net::executor &exec
 }
 
 Owl::Outbound::BoundPtr Owl::Configuration::Match(Owl::Endpoint endpoint) {
-    ProxyNode::ProxyPtr proxyPtr = RuleManager::GetInstance().Match(endpoint);
+    ProxyPtr proxyPtr = RuleManager::GetInstance().Match(endpoint);
     spdlog::info("{} matches rule {}", endpoint.ToString(), proxyPtr->GetName());
     return proxyPtr->GetOutbound(std::move(endpoint));
 }
@@ -51,7 +51,7 @@ void Owl::Configuration::RegisterProxy(const Owl::ConfInfo &confInfo) {
         std::string protocol = utf_to_utf<char>(proxyInfo.protocol);
         std::string server = utf_to_utf<char>(proxyInfo.server);
         std::string port = std::to_string(proxyInfo.port);
-        ExternalProxyNode::ProxyPtr proxyPtr
+        ProxyPtr proxyPtr
                 = std::make_shared<ExternalProxyNode>(name, server, port, BuildProxyPipelineGenerators(proxyInfo));
         proxyNodeManager.AddProxyNode(proxyPtr);
     });
@@ -82,11 +82,11 @@ void Owl::Configuration::RegisterPolicy(const ConfInfo &confInfo, const net::exe
 
     //Update relative proxies
     for (const PolicyInfo &policyInfo : confInfo.policies) {
-        ProxyGroup::ProxyGroupPtr proxyGroupPtr = proxyNodeManager.GetPolicy(utf_to_utf<char>(policyInfo.name));
+        PolicyPtr proxyGroupPtr = proxyNodeManager.GetPolicy(utf_to_utf<char>(policyInfo.name));
 
-        std::vector<ProxyGroup::ProxyPtr> proxies;
+        std::vector<ProxyPtr> proxies;
         for (const std::u32string &proxyName : policyInfo.proxies) {
-            ProxyGroup::ProxyPtr proxy = proxyNodeManager.GetProxyOrPolicy(utf_to_utf<char>(proxyName));
+            ProxyPtr proxy = proxyNodeManager.GetProxyOrPolicy(utf_to_utf<char>(proxyName));
             proxies.push_back(proxy);
         }
 

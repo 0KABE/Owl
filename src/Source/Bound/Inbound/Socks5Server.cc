@@ -1,7 +1,7 @@
 #include "Bound/Inbound/Socks5Server.hpp"
 #include "Bound/Inbound/Socks5.hpp"
 
-Owl::Awaitable<Owl::Bound::TargetEndpoint> Owl::Socks5Server::Initialize() {
+Owl::Awaitable<Owl::TargetEndpoint> Owl::Socks5Server::Initialize() {
     using namespace ProtocolDetail;
 
     bool authenticated = false;
@@ -25,7 +25,7 @@ Owl::Awaitable<Owl::Bound::TargetEndpoint> Owl::Socks5Server::Initialize() {
     co_return authenticated ? co_await Handshake() : std::nullopt;
 }
 
-Owl::Awaitable<Owl::Bound::TargetEndpoint> Owl::Socks5Server::Handshake() {
+Owl::Awaitable<Owl::TargetEndpoint> Owl::Socks5Server::Handshake() {
     using namespace ProtocolDetail;
     const net::executor &executor = co_await net::this_coro::executor;
 
