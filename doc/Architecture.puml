@@ -1,102 +1,422 @@
 @startuml
-class Server{
-    + Create()
-    + Run()
+
+class Server<<ConnectionType>>{
+    + {static} Create()
     + Close()
+    + Run()
+
     - acceptor
+    - opened
 }
 
 abstract Connection{
-    + Open()
+    + {abstract} Open()
     + Close()
     + GetUploadTraffic()
     + GetDownloadTraffic()
-    - RefreshTraffic()
-    - uploadTraffic
-    - downloadTraffic
-    - status
+    + RefreshTraffic()
+
+    # uploadTraffic
+    # downloadTraffic
+    # status
+    # connectionWeakPtr
+}
+
+class ConnectionManager{
+    + Create()
+    + GetConnections()
+    + RemoveConnection()
+
+    - AddConnection
+    - connections
 }
 
 class RelayConnection extends Connection{
     - Initialize()
     - Receive()
     - Send()
+
     - inbound
     - outbound
 }
-class ConnectionManager<Singleton>{
-    + GetInstance() : ConnectionManager
-    + Create(socket) : Connection
-    + GetConnections()
-    - connections
-}
-class Endpoint{
-    + Connect(timeout)
-    + GetState()
-    + GetHostname()
-    + GetPort()
-    + GetSocket()
-    + GetHostnameType()
-    - ParseHostnameType()
-    - Resolve()
-    - TryConnect()
-    - socket
-    - connectCompleted
-    - hostname
-    - port
-    - connectionState
-    - hostnameType
+
+enum Connection::Status{
+    UNINITIALIZED
+    OPEN
+    CLOSE
 }
 
+
 abstract Bound{
-    + Receive()
-    + Send()
+    + {abstract} Send()
+    + {abstract} Receive()
     + GetEndpoint()
     + GetReceiveBuffer()
+    + Shutdown()
+
     # endpoint
     # bufferSize
     # buffer
     # uninitialized
 }
 
-class BoundFactory{
-    + {static} Create()
+abstract Inbound extends Bound{
+    + {abstract} Initialize()
 }
 
+abstract Outbound extends Bound{
+}
+
+class BoundFactory{
+    + Create()
+    + CreateProxy()
+}
+
+class Direct extends Outbound
+class Reject extends Outbound
+class ShadowsocksClient extends Outbound
+class Socks5Server extends Inbound
+
+class CliOptions{
+    + logLevel
+    + config
+}
+
+class LogLevelValidator extends CLI::Validator{
+}
+
+class Configuration{
+    + Load()
+    + Match()
+    - {static} RegisterRule()
+    - {static} RegisterProxy()
+    - {static} RegisterPolicy()
+    - {static} BuildProxyPipelineGenerators()
+}
+
+class ConfigurationGrammar
+class ConfigurationParser{
+    + Parse()
+    - configPath
+}
+
+abstract Pipeline{
+    + {abstract} Wrap()
+    + {abstract} UnWrap()
+}
+
+abstract Crypto extends Pipeline{
+    + {abstract} Encrypt()
+    + {abstract} Decrypt()
+}
+abstract SimpleObfsClient extends Pipeline{
+    + {abstract} Obfuscate()
+    + {abstract} DeObfuscate()
+
+    # hostname
+    # handleOBFS
+    # handleDeOBFS
+}
+class Pipelines extends Pipeline{
+    + PushBackPipeline();
+    - pipelineCollection
+}
+
+abstract Cipher extends Crypto{
+    - encryptor
+    - decryptor
+}
+abstract Aead<<keySize, saltSize, nonceSize, tagSize>> extends Cipher{
+    # {abstract} EncryptOnce()
+    # {abstract} DecryptOnce()
+    # NonceIncrement()
+    - SendSalt()
+    - SendPayloadLength()
+    - SendPayload()
+    - ReceiveSalt()
+    - ReceivePayloadLength()
+    - ReceivePayload()
+
+    # subkey
+    # nonce
+    - saltSent
+    - receiveSalt
+    - receivePayloadLength
+    - password
+    - receivePayloadLength
+    - salt
+    - key
+    - output
+}
+class OpensslAead extends Aead
+class SodiumAead extends Aead
+abstract Stream<<keySize, ivSize>> extends Cipher{
+    # {abstract} EncryptOnce()
+    # {abstract} DecryptOnce()
+    # {abstract} InitCipher()
+    # {abstract} InitDecipher()
+    # key
+    # iv
+    # output
+    - sentIV
+    - receiveIV
+}
+class OpensslStream extends Stream
+class SodiumStream extends Stream
+class Rc4Md5Stream extends Stream
+class CryptoFactory{
+    + Build()
+    - generators
+}
+class CryptoFactory::Register
+class HKDF{
+    + Expand()
+    + {static} Hmac()
+    + {static} Expand()
+    + {static} Extract()
+    - digest
+    - pseudoRandomKey
+}
+
+class HttpObfuscator extends SimpleObfsClient{
+    - RandomBase64()
+    - Prepend()
+    - randomEngine
+    - deObfuscateBuffer
+}
+class TlsObfuscator extends SimpleObfsClient{
+    - ObfsAppData()
+    - RandBytes()
+    - frame
+    - deObfsStatus
+}
+class SimpleObfsClientFactory{
+    + Build()
+    - generator
+}
+class SimpleObfsClientFactory::Register
+
+abstract ProxyNode{
+    + GetName()
+    + {abstract} GetOutbound()
+
+    # name
+}
+
+abstract Policy extends ProxyNode{
+    + SetProxies()
+    + SetSelectedProxy()
+    + GetSelectedProxy()
+    + GetPolicyType()
+    + {abstract} Start()
+    + Close()
+
+    # proxies
+    # selectedProxy
+    # status
+}
+
+enum Policy::Status{
+    RUNNING
+    CLOSED
+}
+class AutoProxyGroup extends Policy{
+    - ConnectivityTest()
+    - period
+    - url
+}
+class StaticProxyGroup extends Policy
+class BuiltInProxyNode extends ProxyNode
+class ExternalProxyNode extends ProxyNode{
+    - proxyHostName
+    - proxyPort
+    - pipelineGenerators
+}
+class PolicyBuilder{
+    + SetName()
+    + AddProxy()
+    + SetPeriod()
+    + SetUrl()
+    + Build()
+    - name
+    - proxies
+    - period
+    - url
+    - proxyGroupPtr
+}
+class PolicyBuilder::Register
+class PolicyBuilder::PolicyStore{
+    + mGenerators
+}
+class ProxyNodeManager{
+    + GetBuiltInProxyNode()
+    + GetProxyNode()
+    + AddProxyNode()
+    + GetPolicy()
+    + AddPolicy()
+    + GetProxyOrPolicy()
+    - builtInProxyNodes
+    - proxyNodes
+    - policies
+}
+class ProxyNodeManager::BuiltInRegister
+
+abstract Rule{
+    + {abstract} Match()
+    + GetProxyPtr()
+
+    # proxyPtr
+}
+class DomainKeywordRule extends Rule{
+    + {static} Create()
+    - keyword
+}
+class DomainSuffixRule extends Rule{
+    + {static} Create()
+    - suffix
+}
+class FinalRule extends Rule{
+    + {static} Create()
+}
+class IpCidrRule extends Rule{
+    + {static} Create()
+    - ip
+    - mask
+}
+class RuleFactory{
+    + {static} Create()
+    - ruleGenerators
+}
+class RuleFactory::Register
+class RuleManager{
+    + AddRule()
+    + Match()
+    - ruleCollection
+}
+
+class DelayTester{
+    + TestDelay()
+    - url
+    - proxyPtr
+}
+class Delegate<<...Args>>{
+    + operator+=()
+    + operator-=()
+    + operator()()
+    - sharedFunctions
+}
+class EnableSharedInstance<<BaseClass>>{
+    + NewInstance()
+}
+class Endpoint{
+    + Connect()
+    + Disconnect()
+    + GetSocket()
+    + GetHostname()
+    + GetPort()
+    + GetHostnameType()
+    + GetState()
+    + ToString()
+    - {static} ParseHostnameType()
+    - {static} StatusToString()
+    - StartConnecting()
+    - ResolveHostname()
+    - TryConnect()
+    - socket
+    - connectingEvent
+    - hostname
+    - port
+    - hostnameType
+    - state
+    - delegate
+}
 class Event{
     + AsyncWait()
     + NotifyAll()
     + NotifyOnce()
-}
-
-class TimeoutEvent{
-    + Run()
+    + ContinuouslyNotify()
     - timer
-    - actions
 }
-
 class FinalAction{
     + Disable()
     - enable
     - actions
 }
-
-abstract Inbound extends Bound{
-    + Initialize()
+class HttpClient<<RequestBody, ResponseBody>>{
+    + BuildRequest()
+    + Run()
+    + Stop()
+    + SendRequest()
+    + ReceiveResponse()
+    - url
+    - proxyNode
+    - outbound
+    - request
+    - response
+}
+class Singleton<<T>>
+class TimeoutEvent{
+    + operator+=()
+    + Run()
+    + Cancel()
+    - timer
+    - actions
+}
+class Url{
+    + {static} Parse()
+    + GetScheme()
+    + GetHost()
+    + GetPort()
+    + GetUrl()
+    + GetPath()
+    - url
+    - scheme
+    - host
+    - port
+    - path
 }
 
-abstract Outbound extends Bound
 
-class Direct extends Outbound
+ConnectionManager --> Connection
+Connection --> Connection::Status
+RelayConnection --> Inbound
+RelayConnection --> Outbound
+RelayConnection .u.> Configuration
+Server ..> Connection
 
-class Socks5Server extends Inbound{
-    - Handshake()
-}
-
-Server ..> ConnectionManager
 BoundFactory ..> Bound
-Endpoint ..* Bound
-Connection --o ConnectionManager
-RelayConnection --o Bound
+Bound --> Endpoint
 
+Configuration ..> RuleManager
+Configuration ..> ConfigurationParser
+ConfigurationParser ..> ConfigurationGrammar
+
+ShadowsocksClient --> Pipeline
+
+CryptoFactory::Register ..> CryptoFactory
+CryptoFactory ..> Crypto
+Aead ..> HKDF
+
+SimpleObfsClientFactory::Register ..> SimpleObfsClientFactory
+SimpleObfsClientFactory ..> SimpleObfsClient
+
+Rule --> ProxyNode
+RuleFactory::Register ..> RuleFactory
+RuleFactory ..> Rule
+RuleManager ..> Rule
+
+ProxyNodeManager ..> ProxyNode
+ProxyNode ..> BoundFactory
+ProxyNodeManager::BuiltInRegister ..> ProxyNodeManager
+
+Policy --> Policy::Status
+Policy o-- ProxyNode
+PolicyBuilder ..> Policy
+PolicyBuilder::Register ..> PolicyBuilder::PolicyStore
+PolicyBuilder ..> PolicyBuilder::PolicyStore
+AutoProxyGroup ..> DelayTester
+
+DelayTester ..> HttpClient
+HttpClient --> Url
+Endpoint ..> Delegate
 @enduml
