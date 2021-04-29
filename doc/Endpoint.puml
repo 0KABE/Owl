@@ -1,0 +1,51 @@
+@startuml
+class EndPoint{
+    + Connect()
+    + Disconnect()
+    + GetSocket()
+    + GetHostname()
+    + GetPort()
+    + GetHostnameType()
+    + GetState()
+    + ToString()
+    - {static} ParseHostnameType()
+    - {static} StatusToString()
+    - StartConnecting()
+    - ResolveHostname()
+    - TryConnect()
+    - socket
+    - connectingEvent
+    - hostname
+    - port
+    - hostnameType
+    - state
+    - delegate
+}
+EndPoint --> HostnameType
+EndPoint --> ConnectionState
+
+enum HostnameType{
+    HOST_DOMAIN
+    HOST_IP
+}
+
+enum ConnectionState{
+    READY
+    CONNECTING
+    CONNECTED
+    DISCONNECTED
+}
+@enduml
+
+@startuml
+Connecting: Notify all when exiting
+Connecting: Lock the object for\n prevent another coroutine operating on it
+
+[*] --> Ready
+Ready --> Connecting
+Ready --> Disconnect
+Connecting --> Connected
+Connecting --> Disconnect
+Connected --> Disconnect
+Disconnect --> [*]
+@enduml
