@@ -1,0 +1,10 @@
+@startuml
+abstract Rule{
+    + Match()
+    + GetProxyPtr()
+}
+class FinalRule extends Rule
+class DomainSuffixRule extends Rule
+class DomainKeywordRule extends Rule
+class IpCidrRule extends Rule
+@enduml
