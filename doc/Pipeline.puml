@@ -1,0 +1,14 @@
+@startuml
+interface Pipeline{
+   + {abstract} Wrap()
+   + {abstract} UnWrap()
+}
+class Pipelines extends Pipeline{
+    + PushBackPipeline()
+    - pipelineCollection
+}
+abstract Crypto extends Pipeline
+abstract Obfuscator extends Pipeline
+
+Pipeline --* Pipelines
+@enduml
