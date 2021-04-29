@@ -1,0 +1,23 @@
+@startuml
+class Configuration
+abstract Rule
+abstract ProxyNode
+abstract Policy extends ProxyNode
+abstract Bound
+abstract Inbound extends Bound
+abstract Outbound extends Bound
+abstract Pipeline
+abstract Connection
+class Endpoint
+class Server<<ConnectionType>>
+
+Server --* Connection
+Rule --> ProxyNode
+ProxyNode --o Policy
+ProxyNode ..> Bound
+Bound --> Endpoint
+Connection --* Bound
+Connection ..> Configuration
+Configuration .u.> Rule
+Outbound --> Pipeline
+@enduml
