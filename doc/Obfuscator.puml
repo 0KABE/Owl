@@ -1,0 +1,9 @@
+@startuml
+interface Pipeline
+abstract SimpleObfsClient implements Pipeline{
+    + Obfuscate()
+    + DeObfuscate()
+}
+class HttpObfuscator extends SimpleObfsClient
+class TlsObfuscator extends SimpleObfsClient
+@enduml
