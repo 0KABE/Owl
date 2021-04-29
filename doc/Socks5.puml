@@ -1,0 +1,42 @@
+@startuml
+map ClientGreeting{
+    VER => 1Byte
+    NAUTH => 1Byte
+    AUTH => 1Byte Per method
+}
+map ServerChoice{
+    VER => 1Byte
+    CAUTH => 1Byte
+}
+map Address{
+    TYPE => 1Byte
+    ADDR => Variable
+}
+map ClientConnectionRequest{
+    VER => 1Byte
+    CMD => 1Byte
+    RSV => 1Byte
+    DSTADDR => Address
+    DSTPORT => 2Bytes
+}
+map ResponsePacketFromServer{
+    VER => 1Byte
+    STATUS => 1Byte
+    RSV => 1Byte
+    BNDADDR => Address
+    BNDPORT => 2Bytes
+}
+@enduml
+
+@startuml
+boundary Client
+boundary Socks5Server
+Client <--> Socks5Server : Establish TCP connection
+...
+Client --> Socks5Server : ClientGreeting
+return ServerChoice
+Client --> Socks5Server : ClientConnectionRequest
+return ResponsePacketFromServer
+...
+Client <--> Socks5Server : Payload
+@enduml
