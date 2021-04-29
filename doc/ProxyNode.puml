@@ -1,0 +1,16 @@
+@startuml
+class ProxyNodeManager
+class ProxyNodeManager::BuiltInRegister
+abstract ProxyNode
+class BuiltInProxyNode<OutboundType> extends ProxyNode
+object DirectProxyNode
+object RejectProxyNode
+class ExternalProxyNode extends ProxyNode
+
+ProxyNodeManager::BuiltInRegister ..> ProxyNodeManager
+ProxyNodeManager ..> ProxyNode
+DirectProxyNode ..> ProxyNodeManager::BuiltInRegister
+RejectProxyNode ..> ProxyNodeManager::BuiltInRegister
+DirectProxyNode .. BuiltInProxyNode
+RejectProxyNode .. BuiltInProxyNode
+@enduml
