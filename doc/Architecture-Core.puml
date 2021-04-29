@@ -21,3 +21,26 @@ Connection ..> Configuration
 Configuration .u.> Rule
 Outbound --> Pipeline
 @enduml
+
+@startuml
+actor User
+frame Laptop{
+    boundary Browser
+    node ProxyServer {
+        component Inbound
+        component Outbound
+    }
+}
+cloud Internet{
+    boundary RemoteProxyServer
+    entity Baidu
+    entity Youtube
+}
+
+User -r- Browser
+Browser -- Inbound
+Inbound -- Outbound
+Outbound -d- RemoteProxyServer
+Outbound -r- Baidu
+RemoteProxyServer -- Youtube
+@enduml
