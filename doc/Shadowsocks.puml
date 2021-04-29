@@ -1,0 +1,33 @@
+@startuml
+entity Client
+component ShadowsocksLocal
+component ShadowsocksRemote
+entity Target
+
+Client <-r-> ShadowsocksLocal
+ShadowsocksLocal <-r-> ShadowsocksRemote : Encrypted data
+ShadowsocksRemote <-r-> Target
+@enduml
+
+@startuml
+object Data{
+    Address
+    Payload
+}
+map IPV4Address{
+    1Byte => 0x01
+    4Bytes => IP
+    2Bytes => Port
+}
+map IPV6Address{
+    1Byte => 0x04
+    16Bytes => IP
+    2Bytes => Port
+}
+map HostAddress{
+    1Byte => 0x03
+    1Byte up to 255 => HostLength
+    Variable up to 255 => HostString
+    2Bytes => Port
+}
+@enduml
