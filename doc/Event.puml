@@ -1,0 +1,17 @@
+@startuml
+class Event{
+    + AsyncWait()
+    + NotifyAll()
+    + NotifyOnce()
+    + ContinuouslyNotify()
+    - timer
+}
+
+class TimeoutEvent{
+    + operator+=()
+    + Run()
+    + Cancel()
+    - timer
+    - actions
+}
+@enduml
