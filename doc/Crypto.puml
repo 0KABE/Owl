@@ -1,0 +1,73 @@
+@startuml
+abstract Pipeline{
+    + {abstract} Wrap()
+    + {abstract} UnWrap()
+}
+
+abstract Crypto extends Pipeline{
+    + {abstract} Encrypt()
+    + {abstract} Decrypt()
+}
+
+abstract Cipher extends Crypto{
+    - encryptor
+    - decryptor
+}
+abstract Aead<<keySize, saltSize, nonceSize, tagSize>> extends Cipher{
+    # {abstract} EncryptOnce()
+    # {abstract} DecryptOnce()
+    # NonceIncrement()
+    - SendSalt()
+    - SendPayloadLength()
+    - SendPayload()
+    - ReceiveSalt()
+    - ReceivePayloadLength()
+    - ReceivePayload()
+
+    # subkey
+    # nonce
+    - saltSent
+    - receiveSalt
+    - receivePayloadLength
+    - password
+    - receivePayloadLength
+    - salt
+    - key
+    - output
+}
+class OpensslAead extends Aead
+class SodiumAead extends Aead
+abstract Stream<<keySize, ivSize>> extends Cipher{
+    # {abstract} EncryptOnce()
+    # {abstract} DecryptOnce()
+    # {abstract} InitCipher()
+    # {abstract} InitDecipher()
+    # key
+    # iv
+    # output
+    - sentIV
+    - receiveIV
+}
+class OpensslStream extends Stream
+class SodiumStream extends Stream
+class Rc4Md5Stream extends Stream
+class CryptoFactory{
+    + Build()
+    - generators
+}
+
+class CryptoFactory::Register
+
+class HKDF{
+    + Expand()
+    + {static} Hmac()
+    + {static} Expand()
+    + {static} Extract()
+    - digest
+    - pseudoRandomKey
+}
+
+Aead ..> HKDF
+CryptoFactory::Register ..> CryptoFactory
+CryptoFactory ..> Cipher
+@enduml
