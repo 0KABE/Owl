@@ -1,4 +1,5 @@
 #include <Connection/RelayConnection.hpp>
+#include "Connection/ApiConnection.hpp"
 #include <spdlog/spdlog.h>
 #include "Util/Net.hpp"
 #include "Server.hpp"
@@ -19,6 +20,9 @@ int main(int argc, char *argv[]) {
 
     Owl::Server<Owl::RelayConnection>::ServerPtr server
             = Owl::Server<Owl::RelayConnection>::Create(ioContext.get_executor(), 9999);
+    Owl::Server<Owl::ApiConnection>::ServerPtr apiServer
+            = Owl::Server<Owl::ApiConnection>::Create(ioContext.get_executor(), 8080);
+
     ioContext.run();
     return 0;
 }
