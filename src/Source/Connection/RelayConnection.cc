@@ -41,7 +41,9 @@ Owl::Awaitable<void> Owl::RelayConnection::Receive() {
         mStatus = CLOSE;
     });
     while (mStatus == OPEN) {
-        co_await mOutbound->Send(co_await mInbound->Receive());
+        Buffer &buffer = co_await mInbound->Receive();
+        mUploadTraffic += buffer.size();
+        co_await mOutbound->Send(buffer);
     }
 }
 
@@ -51,7 +53,9 @@ Owl::Awaitable<void> Owl::RelayConnection::Send() {
         mStatus = CLOSE;
     });
     while (mStatus == OPEN) {
-        co_await mInbound->Send(co_await mOutbound->Receive());
+        Buffer &buffer = co_await mOutbound->Receive();
+        mDownloadTraffic += buffer.size();
+        co_await mInbound->Send(buffer);
     }
 }
 

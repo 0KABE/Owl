@@ -3,6 +3,7 @@
 #include "Util/Net.hpp"
 #include "Util/Awaitable.hpp"
 #include <boost/beast.hpp>
+#include <Connection.hpp>
 
 namespace Owl {
     using StringBody = boost::beast::http::string_body;
@@ -11,7 +12,8 @@ namespace Owl {
 
     class Handler {
     public:
-        [[nodiscard]] virtual Awaitable<void> Handle(const Request &request, Socket socket) const = 0;
+        [[nodiscard]] virtual Owl::Awaitable<void>
+        Handle(const Owl::Request &request, Owl::Socket socket, const Owl::Connection::Status &status) const = 0;
 
         [[nodiscard]] virtual bool Match(const Request &request) const = 0;
 

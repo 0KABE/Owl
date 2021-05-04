@@ -9,15 +9,15 @@ namespace Owl {
     public:
         using HandlerCollection = std::vector<HandlerPtr>;
 
-        template<typename T>
         struct Register {
             explicit Register(HandlerPtr handler) {
                 Controller &controller = Controller::GetInstance();
-                controller.mHandlerCollection.push_back(handler);
+                controller.mHandlerCollection.push_back(std::move(handler));
             }
         };
 
-        Awaitable<void> Handle(const Request &request, Socket socket) const;
+        Owl::Awaitable<void>
+        Handle(const Owl::Request &request, Owl::Socket socket, const Connection::Status &status) const;
 
     private:
         Controller() = default;

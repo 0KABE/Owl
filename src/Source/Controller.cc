@@ -1,10 +1,12 @@
 #include "Controller.hpp"
 #include <spdlog/spdlog.h>
 
-Owl::Awaitable<void> Owl::Controller::Handle(const Owl::Request &request, Owl::Socket socket) const {
+Owl::Awaitable<void>
+Owl::Controller::Handle(const Owl::Request &request, Owl::Socket socket, const Connection::Status &status) const {
     for (const HandlerPtr &handlerPtr : mHandlerCollection) {
         if (handlerPtr->Match(request)) {
-            co_await handlerPtr->Handle(request, std::move(socket));
+            spdlog::info("Handling {} API request", request.target().to_string());
+            co_await handlerPtr->Handle(request, std::move(socket), status);
             co_return;
         }
     }
