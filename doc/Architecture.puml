@@ -1,5 +1,5 @@
 @startuml
-
+skinparam linetype ortho
 class Server<<ConnectionType>>{
     + {static} Create()
     + Close()
@@ -46,6 +46,21 @@ enum Connection::Status{
     CLOSE
 }
 
+class ApiConnection extends Connection{
+    - Handle()
+    - socket
+}
+
+class Controller<<Singleton>>{
+    + Handle()
+    - handlerCollection
+}
+class Controller::Register
+interface Handler{
+    + Handle()
+    + Match()
+}
+class TrafficHandler extends Handler
 
 abstract Bound{
     + {abstract} Send()
@@ -381,8 +396,12 @@ ConnectionManager --> Connection
 Connection --> Connection::Status
 RelayConnection --> Inbound
 RelayConnection --> Outbound
-RelayConnection .u.> Configuration
+RelayConnection ..> Configuration
+ApiConnection ..> Controller
 Server ..> Connection
+
+Controller::Register ..> Controller
+Handler --* Controller
 
 BoundFactory ..> Bound
 Bound --> Endpoint
