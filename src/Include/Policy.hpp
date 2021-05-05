@@ -19,6 +19,8 @@ namespace Owl {
         //TODO need to guarantee selectedProxy is not null
         const ProxyPtr &GetSelectedProxy() const;
 
+        const std::vector<ProxyPtr> &GetProxies() const;
+
         [[nodiscard]] virtual std::string GetPolicyType() const = 0;
 
         virtual void Start(const net::executor &executor);

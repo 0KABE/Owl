@@ -10,6 +10,9 @@ namespace Owl {
     class ProxyNodeManager : public Singleton<ProxyNodeManager> {
         friend Singleton<ProxyNodeManager>;
     public:
+        using Policies = std::unordered_map<std::string, PolicyPtr>;
+        using Proxies = std::unordered_map<std::string, ProxyPtr>;
+
         ProxyPtr GetBuiltInProxyNode(const std::string &name);
 
         ProxyPtr GetProxyNode(const std::string &name);
@@ -21,6 +24,8 @@ namespace Owl {
         void AddPolicy(const PolicyPtr &proxyGroupPtr);
 
         ProxyPtr GetProxyOrPolicy(const std::string &name);
+
+        [[nodiscard]] const std::unordered_map<std::string, PolicyPtr> &GetPolicies() const;
 
         template<typename T>
         struct BuiltInRegister {
@@ -34,9 +39,9 @@ namespace Owl {
     private:
         ProxyNodeManager() = default;
 
-        std::unordered_map<std::string, ProxyPtr> mBuiltInProxyNodes;
-        std::unordered_map<std::string, ProxyPtr> mProxyNodes;
-        std::unordered_map<std::string, PolicyPtr> mPolicies;
+        Proxies mBuiltInProxyNodes;
+        Proxies mProxyNodes;
+        Policies mPolicies;
     };
 }
 

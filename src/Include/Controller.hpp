@@ -4,6 +4,9 @@
 #include "Controller/Handler.hpp"
 
 namespace Owl {
+    //TODO set selected proxy
+    //TODO get latency of proxies
+    //TODO reload config
     class Controller : public Singleton<Controller> {
         friend Singleton<Controller>;
     public:

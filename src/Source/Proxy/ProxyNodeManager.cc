@@ -31,3 +31,7 @@ Owl::ProxyPtr Owl::ProxyNodeManager::GetProxyOrPolicy(const std::string &name) {
 
     throw std::invalid_argument(fmt::format("{} is not in BuiltProxyNode/ExternalProxyNodes/Policies", name));
 }
+
+const std::unordered_map<std::string, Owl::PolicyPtr> &Owl::ProxyNodeManager::GetPolicies() const {
+    return mPolicies;
+}
