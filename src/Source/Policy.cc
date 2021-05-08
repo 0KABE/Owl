@@ -9,6 +9,7 @@ void Owl::Policy::SetSelectedProxy(ProxyPtr &selectedProxyPtr) {
         throw std::invalid_argument(
                 fmt::format("Policy does not contain {}", selectedProxyPtr->GetName()));
     }
+    spdlog::info("Set {} selected proxy as {}", mName, selectedProxyPtr->GetName());
     mSelectedProxy = selectedProxyPtr;
 }
 
