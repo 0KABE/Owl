@@ -27,6 +27,10 @@ namespace Owl {
 
         [[nodiscard]] const std::unordered_map<std::string, PolicyPtr> &GetPolicies() const;
 
+        void ClearProxyNodes();
+
+        void ClearPolicies();
+
         template<typename T>
         struct BuiltInRegister {
             explicit BuiltInRegister(const std::string &name) {

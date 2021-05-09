@@ -8,7 +8,7 @@
 
 int main(int argc, char *argv[]) {
     CLI::App app;
-    Owl::CLIOptions cliOptions;
+    Owl::CLIOptions &cliOptions = Owl::CLIOptions::GetInstance();
     Owl::InitialCLI(app, cliOptions);
     CLI11_PARSE(app, argc, argv)
 

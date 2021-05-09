@@ -15,3 +15,7 @@ Owl::ProxyPtr Owl::RuleManager::Match(const Owl::Endpoint &endpoint) const {
     return iterator->get()->GetProxyPtr();
 }
 
+void Owl::RuleManager::ClearRules() {
+    mRuleCollection.clear();
+}
+

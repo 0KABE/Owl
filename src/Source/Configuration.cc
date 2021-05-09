@@ -1,4 +1,5 @@
 #include <boost/locale.hpp>
+#include <fstream>
 #include "Configuration.hpp"
 #include "Configuration/ConfigurationParser.hpp"
 #include "Rule/RuleManager.hpp"
@@ -16,10 +17,13 @@ void Owl::Configuration::Load(const std::string &path, const net::executor &exec
 
     ConfigurationParser parser(path);
     ConfInfo confInfo = parser.Parse();
+    Register(confInfo, executor);
+}
 
-    RegisterProxy(confInfo);
-    RegisterPolicy(confInfo, executor);
-    RegisterRule(confInfo);
+std::string Owl::Configuration::GetConfigContent(const std::string &path) {
+    std::ifstream ifStream(path);
+    const std::string content((std::istreambuf_iterator<char>(ifStream)), std::istreambuf_iterator<char>());
+    return content;
 }
 
 Owl::Outbound::BoundPtr Owl::Configuration::Match(Owl::Endpoint endpoint) {
@@ -28,10 +32,19 @@ Owl::Outbound::BoundPtr Owl::Configuration::Match(Owl::Endpoint endpoint) {
     return proxyPtr->GetOutbound(std::move(endpoint));
 }
 
+void Owl::Configuration::Register(const ConfInfo &confInfo, const net::executor &executor) {
+    RegisterProxy(confInfo);
+    RegisterPolicy(confInfo, executor);
+    RegisterRule(confInfo);
+}
+
 void Owl::Configuration::RegisterRule(const Owl::ConfInfo &confInfo) {
     ProxyNodeManager &proxyNodeManager = ProxyNodeManager::GetInstance();
     RuleManager &ruleManager = RuleManager::GetInstance();
     RuleFactory &ruleFactory = RuleFactory::GetInstance();
+
+    // For multiple invocation case
+    ruleManager.ClearRules();
 
     std::for_each(confInfo.rules.rbegin(), confInfo.rules.rend(), [&](const RuleInfo &ruleInfo) {
         std::string type = boost::locale::conv::utf_to_utf<char>(ruleInfo.type);
@@ -45,6 +58,9 @@ void Owl::Configuration::RegisterProxy(const Owl::ConfInfo &confInfo) {
     using boost::locale::conv::utf_to_utf;
 
     ProxyNodeManager &proxyNodeManager = ProxyNodeManager::GetInstance();
+
+    // For multiple invocation case
+    proxyNodeManager.ClearProxyNodes();
 
     std::for_each(confInfo.proxies.begin(), confInfo.proxies.end(), [&](const ProxyInfo &proxyInfo) {
         std::string name = utf_to_utf<char>(proxyInfo.name);
@@ -60,6 +76,9 @@ void Owl::Configuration::RegisterProxy(const Owl::ConfInfo &confInfo) {
 void Owl::Configuration::RegisterPolicy(const ConfInfo &confInfo, const net::executor &executor) {
     using boost::locale::conv::utf_to_utf;
     ProxyNodeManager &proxyNodeManager = ProxyNodeManager::GetInstance();
+
+    // For multiple invocation case
+    proxyNodeManager.ClearPolicies();
 
     //Register all polices
     for (const PolicyInfo &policyInfo : confInfo.policies) {

@@ -18,9 +18,13 @@ namespace Owl {
 
         static void Load(const std::string &path, const net::executor &executor);
 
+        static std::string GetConfigContent(const std::string &path);
+
         static Outbound::BoundPtr Match(Endpoint endpoint);
 
     private:
+        static void Register(const ConfInfo &confInfo, const net::executor &executor);
+
         static void RegisterRule(const ConfInfo &confInfo);
 
         static void RegisterProxy(const ConfInfo &confInfo);

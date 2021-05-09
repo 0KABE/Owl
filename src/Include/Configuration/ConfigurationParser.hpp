@@ -35,6 +35,8 @@ namespace Owl {
 
         ConfInfo Parse();
 
+        static ConfInfo Parse(std::istream &istream);
+
     private:
         std::string mConfigPath;
     };

@@ -2,11 +2,16 @@
 
 #include <CLI/CLI.hpp>
 #include <spdlog/spdlog.h>
+#include "Util/Singleton.hpp"
 
 namespace Owl {
-    struct CLIOptions {
+    struct CLIOptions : public Singleton<CLIOptions> {
+        friend Singleton<CLIOptions>;
+
         std::string logLevel;
         std::string config;
+    private:
+        CLIOptions() = default;
     };
 
     struct LogLevelValidator : public CLI::Validator {

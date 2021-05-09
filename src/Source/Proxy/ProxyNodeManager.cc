@@ -35,3 +35,11 @@ Owl::ProxyPtr Owl::ProxyNodeManager::GetProxyOrPolicy(const std::string &name) {
 const std::unordered_map<std::string, Owl::PolicyPtr> &Owl::ProxyNodeManager::GetPolicies() const {
     return mPolicies;
 }
+
+void Owl::ProxyNodeManager::ClearProxyNodes() {
+    mProxyNodes.clear();
+}
+
+void Owl::ProxyNodeManager::ClearPolicies() {
+    mPolicies.clear();
+}
