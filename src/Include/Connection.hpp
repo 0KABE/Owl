@@ -22,9 +22,9 @@ namespace Owl {
 
         virtual ~Connection() = default;
 
-        Speed GetUploadTraffic() const { return mUploadTraffic; }
+        Speed GetUploadTraffic() const { return mUpload; }
 
-        Speed GetDownloadTraffic() const { return mDownloadTraffic; }
+        Speed GetDownloadTraffic() const { return mDownload; }
 
         Awaitable<void> RefreshTraffic(std::chrono::milliseconds interval) {
             const net::executor &executor = co_await net::this_coro::executor;
@@ -32,13 +32,17 @@ namespace Owl {
             while (mStatus != CLOSE) {
                 timer.expires_after(interval);
                 co_await timer.async_wait(use_awaitable);
-                mUploadTraffic = mDownloadTraffic = 0;
+                mUpload = mCurrentUpload;
+                mDownload = mCurrentDownload;
+                mCurrentUpload = mCurrentDownload = 0;
             }
         }
 
     protected:
-        Speed mUploadTraffic = 0;
-        Speed mDownloadTraffic = 0;
+        Speed mUpload = 0;
+        Speed mDownload = 0;
+        Speed mCurrentUpload = 0;
+        Speed mCurrentDownload = 0;
         Status mStatus = UNINITIALIZED;
         ConnectionWeakPtr mConnectionWeakPtr;
     };
