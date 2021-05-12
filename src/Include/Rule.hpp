@@ -13,6 +13,10 @@ namespace Owl {
 
         virtual bool Match(const Endpoint &endpoint) = 0;
 
+        [[nodiscard]] virtual std::string RuleType() const = 0;
+
+        [[nodiscard]] virtual std::string Condition() const = 0;
+
         [[nodiscard]] const ProxyPtr &GetProxyPtr() const;
 
     protected:

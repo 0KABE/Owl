@@ -14,4 +14,12 @@ Owl::DomainSuffixRule::Create(const Owl::ProxyPtr &proxyPtr, const std::string &
     return std::make_unique<DomainSuffixRule>(proxyPtr, rule);
 }
 
+std::string Owl::DomainSuffixRule::RuleType() const {
+    return "DomainSuffix";
+}
+
+std::string Owl::DomainSuffixRule::Condition() const {
+    return mSuffix;
+}
+
 static Owl::RuleFactory::Register<Owl::DomainSuffixRule> r("DOMAIN-SUFFIX");

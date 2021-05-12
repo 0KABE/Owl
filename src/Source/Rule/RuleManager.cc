@@ -19,3 +19,7 @@ void Owl::RuleManager::ClearRules() {
     mRuleCollection.clear();
 }
 
+const Owl::RuleManager::RuleCollection &Owl::RuleManager::GetRuleCollection() const {
+    return mRuleCollection;
+}
+

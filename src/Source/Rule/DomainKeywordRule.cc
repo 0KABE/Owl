@@ -15,4 +15,12 @@ Owl::DomainKeywordRule::Create(const Owl::ProxyPtr &proxyPtr, const std::string 
     return std::make_unique<DomainKeywordRule>(proxyPtr, rule);
 }
 
+std::string Owl::DomainKeywordRule::RuleType() const {
+    return "DomainKeyword";
+}
+
+std::string Owl::DomainKeywordRule::Condition() const {
+    return mKeyword;
+}
+
 static Owl::RuleFactory::Register<Owl::DomainKeywordRule> r("DOMAIN-KEYWORD");

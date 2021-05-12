@@ -11,6 +11,10 @@ namespace Owl {
 
         bool Match(const Endpoint &endpoint) override;
 
+        std::string RuleType() const override;
+
+        std::string Condition() const override;
+
         static IpCidrRulePtr Create(const ProxyPtr &proxyPtr, const std::string &rule);
 
     private:

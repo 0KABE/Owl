@@ -26,4 +26,12 @@ Owl::IpCidrRule::Create(const Owl::ProxyPtr &proxyPtr, const std::string &rule) 
     return std::make_unique<IpCidrRule>(proxyPtr, ip, netMask);
 }
 
+std::string Owl::IpCidrRule::RuleType() const {
+    return "IP/CIDR";
+}
+
+std::string Owl::IpCidrRule::Condition() const {
+    return fmt::format("{}/{}", boost::asio::ip::address_v4(mIp).to_string(), mMask);
+}
+
 static Owl::RuleFactory::Register<Owl::IpCidrRule> r("IP-CIDR");

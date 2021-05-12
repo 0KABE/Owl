@@ -13,6 +13,8 @@ namespace Owl {
 
         void AddRule(RulePtr rulePtr);
 
+        [[nodiscard]] const RuleCollection &GetRuleCollection() const;
+
         void ClearRules();
 
         [[nodiscard]] ProxyPtr Match(const Endpoint &endpoint) const;
