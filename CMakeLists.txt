@@ -3,6 +3,11 @@ project(Owl)
 
 set(CMAKE_CXX_STANDARD 20)
 
+message("Installing dependencies by Conan...")
+execute_process(
+        COMMAND bash -c "conan install \"${CMAKE_CURRENT_SOURCE_DIR}\" -if \"${CMAKE_CURRENT_SOURCE_DIR}/dependency\" --build=missing"
+)
+
 # Boost ASIO has some compatibility issue of C++20 Concept under clangd as language server
 # But there no error during compiling even if without this definition
 add_definitions(-DBOOST_ASIO_DISABLE_CONCEPTS)
