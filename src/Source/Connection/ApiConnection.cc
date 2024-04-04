@@ -26,6 +26,6 @@ Owl::Awaitable<void> Owl::ApiConnection::Handle() {
     Request request;
     flat_buffer buffer;
     co_await http::async_read(mSocket, buffer, request, use_awaitable);
-    spdlog::debug("{}", request.target().to_string());
+    spdlog::debug("{}", static_cast<std::string_view>(request.target()));
     co_await Controller::GetInstance().Handle(request, std::move(mSocket), mStatus);
 }

@@ -3,7 +3,7 @@
 #include "Bound/BoundFactory.hpp"
 
 Owl::Outbound::BoundPtr Owl::ExternalProxyNode::GetOutbound(Owl::Endpoint endpoint) const {
-    const net::executor &executor = endpoint.GetSocket().get_executor();
+    net::any_io_executor executor = endpoint.GetSocket().get_executor();
     Pipelines::PipelinesPtr pipelinesPtr = std::make_unique<Pipelines>();
     std::for_each(mPipelineGenerators.begin(), mPipelineGenerators.end(),
                   [&](const PipelineGenerator &pipelineGenerator) {

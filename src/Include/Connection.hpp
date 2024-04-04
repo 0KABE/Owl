@@ -27,7 +27,7 @@ namespace Owl {
         Speed GetDownloadTraffic() const { return mDownload; }
 
         Awaitable<void> RefreshTraffic(std::chrono::milliseconds interval) {
-            const net::executor &executor = co_await net::this_coro::executor;
+            auto executor = co_await net::this_coro::executor;
             net::steady_timer timer(executor);
             while (mStatus != CLOSE) {
                 timer.expires_after(interval);

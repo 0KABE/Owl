@@ -12,12 +12,12 @@ namespace Owl {
     public:
         using ServerPtr = std::shared_ptr<Server>;
 
-        Server(const net::executor &executor, uint16_t port)
+        Server(net::any_io_executor executor, uint16_t port)
                 : mAcceptor(executor, {net::ip::tcp::v4(), port}) {}
 
         ~Server() = default;
 
-        static ServerPtr Create(const net::executor &executor, uint16_t port) {
+        static ServerPtr Create(net::any_io_executor executor, uint16_t port) {
             using namespace net;
 
             ServerPtr server = std::make_unique<Server<ConnectionType>>(executor, port);

@@ -9,7 +9,7 @@ Owl::Endpoint::Endpoint(Socket socket)
           mPort(std::to_string(mSocket.remote_endpoint().port())),
           mHostnameType(ParseHostnameType(mHostname)) {}
 
-Owl::Endpoint::Endpoint(Executor &executor, Hostname hostname, Port port)
+Owl::Endpoint::Endpoint(Executor executor, Hostname hostname, Port port)
         : mSocket(executor),
           mConnectingEvent(Event::NewInstance(executor)),
           mHostname(std::move(hostname)),
@@ -74,7 +74,7 @@ Owl::Awaitable<void> Owl::Endpoint::StartConnecting(Milliseconds timeout) {
 
 Owl::Awaitable<Owl::Endpoint::ResolveResult> Owl::Endpoint::ResolveHostname() {
     spdlog::info("Resolving {}:{}", mHostname, mPort);
-    const net::executor &executor = co_await net::this_coro::executor;
+    auto executor = co_await net::this_coro::executor;
 
     Resolver resolver(executor);
 
@@ -94,7 +94,7 @@ Owl::Awaitable<void>
 Owl::Endpoint::TryConnect(Owl::Endpoint::ResolveResult &resolveResult, Owl::Endpoint::Milliseconds timeout) {
     spdlog::info("Connecting to {}:{}", mHostname, mPort);
 
-    const net::executor &executor = co_await net::this_coro::executor;
+    auto executor = co_await net::this_coro::executor;
 
     TimeoutEvent timeoutEvent([&](const auto &ec) {
         spdlog::warn("Connect to {}:{} timeout, timeout={}ms", mHostname, mPort, timeout.count());

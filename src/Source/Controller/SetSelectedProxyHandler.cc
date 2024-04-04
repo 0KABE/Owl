@@ -35,8 +35,8 @@ Owl::Awaitable<void> Owl::SetSelectedProxyHandler::Handle(const Owl::Request &re
 }
 
 bool Owl::SetSelectedProxyHandler::Match(const Owl::Request &request) const {
-    spdlog::debug("target: '{}', TARGET: '{}' method: {}", request.target().to_string(), TARGET,
-                  request.method_string().to_string());
+    spdlog::debug("target: '{}', TARGET: '{}' method: {}", static_cast<std::string_view>(request.target()), TARGET,
+                  static_cast<std::string_view>(request.method_string()));
     return request.target() == TARGET;// && request.method() == METHOD;
 }
 

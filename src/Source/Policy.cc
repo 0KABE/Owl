@@ -24,7 +24,7 @@ const std::vector<Owl::ProxyPtr> &Owl::Policy::GetProxies() const {
     return mProxies;
 }
 
-void Owl::Policy::Start(const net::executor &executor) {}
+void Owl::Policy::Start(net::any_io_executor executor) {}
 
 void Owl::Policy::Close() { mStatus = CLOSED; }
 

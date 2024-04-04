@@ -12,7 +12,7 @@
 #include <spdlog/spdlog.h>
 #include <Proxy/StaticProxyGroup.hpp>
 
-void Owl::Configuration::Load(const std::string &path, const net::executor &executor) {
+void Owl::Configuration::Load(const std::string &path, net::any_io_executor executor) {
     spdlog::info("Loading configuration: {}", path);
 
     ConfigurationParser parser(path);
@@ -32,7 +32,7 @@ Owl::Outbound::BoundPtr Owl::Configuration::Match(Owl::Endpoint endpoint) {
     return proxyPtr->GetOutbound(std::move(endpoint));
 }
 
-void Owl::Configuration::Register(const ConfInfo &confInfo, const net::executor &executor) {
+void Owl::Configuration::Register(const ConfInfo &confInfo, net::any_io_executor executor) {
     RegisterProxy(confInfo);
     RegisterPolicy(confInfo, executor);
     RegisterRule(confInfo);
@@ -73,7 +73,7 @@ void Owl::Configuration::RegisterProxy(const Owl::ConfInfo &confInfo) {
     });
 }
 
-void Owl::Configuration::RegisterPolicy(const ConfInfo &confInfo, const net::executor &executor) {
+void Owl::Configuration::RegisterPolicy(const ConfInfo &confInfo, net::any_io_executor executor) {
     using boost::locale::conv::utf_to_utf;
     ProxyNodeManager &proxyNodeManager = ProxyNodeManager::GetInstance();
 

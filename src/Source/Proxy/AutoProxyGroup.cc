@@ -18,14 +18,14 @@ Owl::Outbound::BoundPtr Owl::AutoProxyGroup::GetOutbound(Owl::Endpoint endpoint)
     return mSelectedProxy->GetOutbound(std::move(endpoint));
 }
 
-void Owl::AutoProxyGroup::Start(const net::executor &executor) {
+void Owl::AutoProxyGroup::Start(net::any_io_executor executor) {
     net::co_spawn(executor,
                   [=, self = shared_from_this()] { return ConnectivityTest(); },
                   net::detached);
 }
 
 Owl::Awaitable<void> Owl::AutoProxyGroup::ConnectivityTest() {
-    const net::executor &executor = co_await net::this_coro::executor;
+    auto executor = co_await net::this_coro::executor;
     net::steady_timer timer(executor);
 
     do {

@@ -13,7 +13,7 @@ enum Status {
 };
 
 Awaitable<void> WaitBeforeNotifyHelper(Event &event, Status &status) {
-    const net::executor &executor = co_await net::this_coro::executor;
+    auto executor = co_await net::this_coro::executor;
     net::steady_timer timer(executor);
     timer.expires_after(std::chrono::seconds(1));
     co_await timer.async_wait(net::use_awaitable);
@@ -22,7 +22,7 @@ Awaitable<void> WaitBeforeNotifyHelper(Event &event, Status &status) {
 }
 
 Awaitable<void> WaitBeforeNotify(Status &status) {
-    const net::executor &executor = co_await net::this_coro::executor;
+    auto executor = co_await net::this_coro::executor;
     EventPtr eventPtr = Event::NewInstance(executor);
     net::co_spawn(executor, [&] { return WaitBeforeNotifyHelper(*eventPtr, status); }, net::detached);
     status = status == INITIALIZED ? WAITING : status;
@@ -39,7 +39,7 @@ TEST(Event, Wait_Before_Notify) {
 }
 
 Awaitable<void> WaitAfterNotifyHelper(Event &event, Status &status) {
-    const net::executor &executor = co_await net::this_coro::executor;
+    auto executor = co_await net::this_coro::executor;
     spdlog::debug("NotifyHelper executing, expect for 50ms");
 
     net::steady_timer timer(executor);
@@ -52,7 +52,7 @@ Awaitable<void> WaitAfterNotifyHelper(Event &event, Status &status) {
 }
 
 Awaitable<void> WaitAfterNotify(TimeoutEvent &timeoutEvent, Status &status) {
-    const net::executor &executor = co_await net::this_coro::executor;
+    auto executor = co_await net::this_coro::executor;
     EventPtr eventPtr = Event::NewInstance(executor);
     net::co_spawn(executor, [&] { return WaitAfterNotifyHelper(*eventPtr, status); }, net::detached);
 

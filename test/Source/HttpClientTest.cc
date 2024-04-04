@@ -9,7 +9,7 @@ using namespace Owl;
 Awaitable<void> DirectHelper(std::string &data, const std::string &url, const ProxyNode::ProxyPtr &proxyNode) {
     boost::beast::http::empty_body::value_type body;
 
-    const net::executor &executor = co_await net::this_coro::executor;
+    auto executor = co_await net::this_coro::executor;
 
     try {
         HttpClient httpClient(executor, Url::Parse(url), proxyNode);

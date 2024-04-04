@@ -12,7 +12,7 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(
         ${PROJECT_NAME}
         Source
-        ${CONAN_LIBS}
+        GTest::GTest
 )
 
 include(GoogleTest)

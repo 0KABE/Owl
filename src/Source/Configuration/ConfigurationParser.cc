@@ -2,6 +2,7 @@
 #include "Configuration/ConfigurationParser.hpp"
 #include <fstream>
 #include <spdlog/spdlog.h>
+#include <boost/regex/pending/unicode_iterator.hpp>
 
 Owl::ConfigurationParser::ConfigurationParser(std::string configPath) : mConfigPath(std::move(configPath)) {}
 

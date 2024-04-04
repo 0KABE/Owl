@@ -16,7 +16,7 @@ namespace Owl {
         using Verb = boost::beast::http::verb;
         using Request = boost::beast::http::request<RequestBody>;
         using Response = boost::beast::http::response<ResponseBody>;
-        using Executor = const net::executor;
+        using Executor = net::any_io_executor;
 
         HttpClient(Executor &executor, Url url, ProxyPtr proxyNode)
                 : mUrl(std::move(url)), mProxyNode(std::move(proxyNode)),

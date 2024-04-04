@@ -1,12 +1,13 @@
 [requires]
 rapidjson/cci.20200410
-boost/1.74.0
+boost/1.84.0
 uriparser/0.9.4
-openssl/1.1.1h
+openssl/3.2.1
 libsodium/1.0.18
-spdlog/1.8.1
-gtest/1.10.0
+spdlog/1.13.0
+gtest/1.14.0
 cli11/1.9.1
 
 [generators]
-cmake
+CMakeDeps
+CMakeToolchain

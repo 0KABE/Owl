@@ -25,7 +25,7 @@ namespace Owl {
         using Socket = net::ip::tcp::socket;
         using Hostname = std::string;
         using Port = std::string;
-        using Executor = const net::executor;
+        using Executor = net::any_io_executor;
         using Milliseconds = std::chrono::milliseconds;
         using Resolver = net::ip::tcp::resolver;
         using ResolveResult = boost::asio::ip::basic_resolver_results<boost::asio::ip::tcp>;
@@ -33,7 +33,7 @@ namespace Owl {
 
         explicit Endpoint(Socket socket);
 
-        Endpoint(Executor &executor, Hostname hostname, Port port);
+        Endpoint(Executor executor, Hostname hostname, Port port);
 
 
         Awaitable<void> Connect(Milliseconds timeout = Milliseconds(500));

@@ -4,7 +4,7 @@
 #include "Util/Event.hpp"
 #include "Util/EnableSharedInstance.hpp"
 
-Owl::Event::Event(const boost::asio::executor &executor) : mTimer(executor) {
+Owl::Event::Event(net::any_io_executor executor) : mTimer(executor) {
     mTimer.expires_at(std::chrono::time_point<std::chrono::steady_clock>::max());
 }
 

@@ -9,7 +9,7 @@ Owl::TimeoutEvent &Owl::TimeoutEvent::operator+=(Owl::TimeoutEvent::Action actio
     return *this;
 }
 
-void Owl::TimeoutEvent::Run(const boost::asio::executor &executor, Owl::TimeoutEvent::Timeout timeout) {
+void Owl::TimeoutEvent::Run(net::any_io_executor executor, Owl::TimeoutEvent::Timeout timeout) {
     mTimer = Timer(executor);
     mTimer->expires_after(timeout);
 

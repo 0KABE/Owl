@@ -37,7 +37,7 @@ namespace Owl {
         void ContinuouslyNotify();
 
     protected:
-        explicit Event(const net::executor &executor);
+        explicit Event(net::any_io_executor executor);
 
         net::steady_timer mTimer;
     };

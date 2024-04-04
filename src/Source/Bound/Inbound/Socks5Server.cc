@@ -27,7 +27,7 @@ Owl::Awaitable<Owl::TargetEndpoint> Owl::Socks5Server::Initialize() {
 
 Owl::Awaitable<Owl::TargetEndpoint> Owl::Socks5Server::Handshake() {
     using namespace ProtocolDetail;
-    const net::executor &executor = co_await net::this_coro::executor;
+    auto executor = co_await net::this_coro::executor;
 
     TargetEndpoint endpoint;
 

@@ -23,7 +23,7 @@ namespace Owl {
 
         TimeoutEvent &operator+=(Action action);
 
-        void Run(const net::executor &executor, Timeout timeout);
+        void Run(net::any_io_executor executor, Timeout timeout);
 
         void Cancel();
 

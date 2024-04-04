@@ -23,7 +23,7 @@ namespace Owl {
 
         [[nodiscard]] virtual std::string GetPolicyType() const = 0;
 
-        virtual void Start(const net::executor &executor);
+        virtual void Start(net::any_io_executor executor);
 
         void Close();
 
