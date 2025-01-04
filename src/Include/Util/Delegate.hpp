@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <unordered_set>
+#include <memory>
 
 template<typename ...Args>
 class Delegate {
